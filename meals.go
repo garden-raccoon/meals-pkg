@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gofrs/uuid"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/health/grpc_health_v1"
 	"sync"
 	"time"
@@ -51,6 +52,7 @@ func New(addr string) (MealsPkgAPI, error) {
 	if err := api.initConn(addr); err != nil {
 		return nil, fmt.Errorf("create MealsApi:  %w", err)
 	}
+	api.HealthClient = grpc_health_v1.NewHealthClient(api.ClientConn)
 
 	api.MealsServiceClient = proto.NewMealsServiceClient(api.ClientConn)
 	return api, nil
@@ -105,7 +107,10 @@ func (api *Api) initConn(addr string) (err error) {
 		PermitWithoutStream: true,             // send pings even without active streams
 	}
 
-	api.ClientConn, err = grpc.Dial(addr, grpc.WithInsecure(), grpc.WithKeepaliveParams(kacp))
+	api.ClientConn, err = grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithKeepaliveParams(kacp))
+	if err != nil {
+		return fmt.Errorf("failed to dial: %w", err)
+	}
 	return
 }
 
