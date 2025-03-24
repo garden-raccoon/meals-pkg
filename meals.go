@@ -2,8 +2,11 @@ package orders
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/gofrs/uuid"
+	"google.golang.org/grpc/health/grpc_health_v1"
+	"sync"
 	"time"
 
 	"google.golang.org/grpc"
@@ -25,7 +28,7 @@ type MealsPkgAPI interface {
 	GetMeals() ([]*models.Meal, error)
 	DeleteMeal(mealUuid uuid.UUID) error
 	MealByName(name string) (*models.Meal, error)
-
+	HealthCheck() error
 	// Close GRPC Api connection
 	Close() error
 }
@@ -36,7 +39,9 @@ type Api struct {
 	addr    string
 	timeout time.Duration
 	*grpc.ClientConn
+	mu sync.Mutex
 	proto.MealsServiceClient
+	grpc_health_v1.HealthClient
 }
 
 // New create new Battles Api instance
@@ -124,4 +129,23 @@ func (api *Api) getMeal(getter *proto.MealGetter) (*models.Meal, error) {
 	}
 
 	return models.MealFromProto(resp), nil
+}
+
+func (api *Api) HealthCheck() error {
+	ctx, cancel := context.WithTimeout(context.Background(), api.timeout)
+	defer cancel()
+
+	api.mu.Lock()
+	defer api.mu.Unlock()
+
+	resp, err := api.HealthClient.Check(ctx, &grpc_health_v1.HealthCheckRequest{Service: "mealsapi"})
+	if err != nil {
+		return fmt.Errorf("healthcheck error: %w", err)
+	}
+
+	if resp.Status != grpc_health_v1.HealthCheckResponse_SERVING {
+		return fmt.Errorf("node is %s", errors.New("service is unhealthy"))
+	}
+	//api.status = service.StatusHealthy
+	return nil
 }
