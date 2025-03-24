@@ -1,0 +1,28 @@
+syntax = "proto3";
+package models;
+
+option go_package = "protocols/meals-pkg";
+
+import "meals-pkg-models.proto";
+
+// OrderService is
+service MealsService {
+    rpc CreateOrUpdateMeals(models.Meals) returns(MealsEmpty);
+    rpc GetMeals(MealsEmpty) returns(models.Meals);
+    rpc MealByName(MealGetter) returns(models.Meal);
+
+    rpc DeleteMeal(MealDeleteReq) returns(MealsEmpty);
+
+}
+
+message MealDeleteReq {
+    bytes meal_uuid = 1;
+}
+message MealsEmpty {}
+
+message MealGetter {
+    oneof getter {
+        bytes   uuid    = 1;
+        string  name    = 2;
+    }
+}
