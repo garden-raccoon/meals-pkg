@@ -3,6 +3,7 @@ module github.com/garden-raccoon/meals-pkg
 go 1.23.2
 
 require (
+	github.com/goccy/go-json v0.10.5
 	github.com/gofrs/uuid v4.4.0+incompatible
 	google.golang.org/grpc v1.67.1
 	google.golang.org/protobuf v1.35.1
