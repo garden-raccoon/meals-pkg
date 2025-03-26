@@ -8,10 +8,8 @@ message Meal {
     string          name        = 2;
     string          description = 3;
     float           price       = 4;
-    MealSettings    meal_settings =5;
-    bytes           meal_any = 6;
+    bytes           meal_settings = 5;
 }
-message MealSettings{}
 
 message Meals{
     repeated Meal Meals = 1;

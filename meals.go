@@ -82,16 +82,20 @@ func (api *Api) GetMeals() ([]*models.Meal, error) {
 		return nil, fmt.Errorf("GetMeals api request: %w", err)
 	}
 
-	meals := models.MealsFromProto(resp)
-
+	meals, err := models.MealsFromProto(resp)
+	if err != nil {
+		return nil, fmt.Errorf("failed to GetMeals %w", err)
+	}
 	return meals, nil
 }
 
 func (api *Api) CreateOrUpdateMeals(s []*models.Meal) (err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), api.timeout)
 	defer cancel()
-	meals := models.MealsToProto(s)
-
+	meals, err := models.MealsToProto(s)
+	if err != nil {
+		return fmt.Errorf("failed to CreateOrUpdateMeals %w", err)
+	}
 	_, err = api.MealsServiceClient.CreateOrUpdateMeals(ctx, meals)
 	if err != nil {
 		return fmt.Errorf("create meals api request: %w", err)
@@ -133,7 +137,11 @@ func (api *Api) getMeal(getter *proto.MealGetter) (*models.Meal, error) {
 		return nil, fmt.Errorf("MealAPI getMeal request failed: %w", err)
 	}
 
-	return models.MealFromProto(resp), nil
+	meal, err := models.MealFromProto(resp)
+	if err != nil {
+		return nil, fmt.Errorf("failed to getMeal %w", err)
+	}
+	return meal, nil
 }
 
 func (api *Api) HealthCheck() error {
