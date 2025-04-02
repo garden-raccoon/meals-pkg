@@ -15,8 +15,6 @@ type Meal struct {
 	MealSettings any       `json:"meal_settings"`
 }
 
-type MealSettings struct{}
-
 // Proto is
 func (mdb Meal) Proto() (*proto.Meal, error) {
 
@@ -26,11 +24,13 @@ func (mdb Meal) Proto() (*proto.Meal, error) {
 		Description: mdb.Description,
 		Price:       float32(mdb.Price),
 	}
-	b, err := json.Marshal(mdb.MealSettings)
-	if err != nil {
-		return nil, fmt.Errorf("failed to marshal meal settings %w", err)
+	if mdb.MealSettings != nil {
+		b, err := json.Marshal(mdb.MealSettings)
+		if err != nil {
+			return nil, fmt.Errorf("failed to marshal meal settings %w", err)
+		}
+		meal.MealSettings = b
 	}
-	meal.MealSettings = b
 	return meal, nil
 }
 
@@ -42,12 +42,14 @@ func MealFromProto(pb *proto.Meal) (*Meal, error) {
 		Description: pb.Description,
 		MealUuid:    uuid.FromBytesOrNil(pb.MealUuid),
 	}
-	var mealAny any
-	err := json.Unmarshal(pb.MealSettings, mealAny)
-	if err != nil {
-		return nil, fmt.Errorf("failed to unmarshal meal settings %w", err)
+	if pb.MealSettings != nil {
+		var mealAny any
+		err := json.Unmarshal(pb.MealSettings, mealAny)
+		if err != nil {
+			return nil, fmt.Errorf("failed to unmarshal meal settings %w", err)
+		}
+		meal.MealSettings = mealAny
 	}
-	meal.MealSettings = mealAny
 	return meal, nil
 }
 
