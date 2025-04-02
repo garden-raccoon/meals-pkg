@@ -44,7 +44,7 @@ func MealFromProto(pb *proto.Meal) (*Meal, error) {
 	}
 	if pb.MealSettings != nil {
 		var mealAny any
-		err := json.Unmarshal(pb.MealSettings, mealAny)
+		err := json.Unmarshal(pb.MealSettings, &mealAny)
 		if err != nil {
 			return nil, fmt.Errorf("failed to unmarshal meal settings %w", err)
 		}
