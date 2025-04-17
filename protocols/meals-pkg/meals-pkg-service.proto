@@ -10,6 +10,7 @@ service MealsService {
     rpc CreateOrUpdateMeals(models.Meals) returns(MealsEmpty);
     rpc GetMeals(MealsEmpty) returns(models.Meals);
     rpc MealByName(MealGetter) returns(models.Meal);
+    rpc MealByMealUuid(MealGetter) returns(models.Meal);
 
     rpc DeleteMeal(MealDeleteReq) returns(MealsEmpty);
 

@@ -29,6 +29,7 @@ type MealsPkgAPI interface {
 	GetMeals() ([]*models.Meal, error)
 	DeleteMeal(mealUuid uuid.UUID) error
 	MealByName(name string) (*models.Meal, error)
+	MealByMealUuid(mealUuid uuid.UUID) (*models.Meal, error)
 	HealthCheck() error
 	// Close GRPC Api connection
 	Close() error
@@ -126,22 +127,43 @@ func (api *Api) MealByName(name string) (*models.Meal, error) {
 	}
 	return api.getMeal(getter)
 }
+func (api *Api) MealByMealUuid(mealUuid uuid.UUID) (*models.Meal, error) {
+	getter := &proto.MealGetter{
+		Getter: &proto.MealGetter_Uuid{
+			Uuid: mealUuid.Bytes(),
+		},
+	}
+	return api.getMeal(getter)
+}
 
 // getMeal is
 func (api *Api) getMeal(getter *proto.MealGetter) (*models.Meal, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), api.timeout)
 	defer cancel()
-
-	resp, err := api.MealsServiceClient.MealByName(ctx, getter)
-	if err != nil {
-		return nil, fmt.Errorf("MealAPI getMeal request failed: %w", err)
+	switch getter.Getter.(type) {
+	case *proto.MealGetter_Name:
+		resp, err := api.MealsServiceClient.MealByName(ctx, getter)
+		if err != nil {
+			return nil, fmt.Errorf("MealAPI getMeal request failed: %w", err)
+		}
+		meal, err := models.MealFromProto(resp)
+		if err != nil {
+			return nil, fmt.Errorf("failed to getMeal %w", err)
+		}
+		return meal, nil
+	case *proto.MealGetter_Uuid:
+		resp, err := api.MealsServiceClient.MealByMealUuid(ctx, getter)
+		if err != nil {
+			return nil, fmt.Errorf("MealAPI getMeal request failed: %w", err)
+		}
+		meal, err := models.MealFromProto(resp)
+		if err != nil {
+			return nil, fmt.Errorf("failed to getMeal %w", err)
+		}
+		return meal, nil
+	default:
+		return nil, fmt.Errorf("%w", errors.New("MealGetter is unknown type"))
 	}
-
-	meal, err := models.MealFromProto(resp)
-	if err != nil {
-		return nil, fmt.Errorf("failed to getMeal %w", err)
-	}
-	return meal, nil
 }
 
 func (api *Api) HealthCheck() error {
