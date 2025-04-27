@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gofrs/uuid"
+	"google.golang.org/grpc/backoff"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/health/grpc_health_v1"
 	"sync"
@@ -16,13 +17,6 @@ import (
 	"github.com/garden-raccoon/meals-pkg/models"
 	proto "github.com/garden-raccoon/meals-pkg/protocols/meals-pkg"
 )
-
-// TODO need to set timeout via lib initialisation
-// timeOut is  hardcoded GRPC requests timeout value
-const timeOut = 60
-
-// Debug on/off
-var Debug = true
 
 type MealsPkgAPI interface {
 	CreateOrUpdateMeals(s []*models.Meal) error
@@ -47,8 +41,8 @@ type Api struct {
 }
 
 // New create new Battles Api instance
-func New(addr string) (MealsPkgAPI, error) {
-	api := &Api{timeout: timeOut * time.Second}
+func New(addr string, timeout time.Duration) (MealsPkgAPI, error) {
+	api := &Api{timeout: timeout}
 
 	if err := api.initConn(addr); err != nil {
 		return nil, fmt.Errorf("create MealsApi:  %w", err)
@@ -112,7 +106,15 @@ func (api *Api) initConn(addr string) (err error) {
 		PermitWithoutStream: true,             // send pings even without active streams
 	}
 
-	api.ClientConn, err = grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithKeepaliveParams(kacp))
+	connParams := grpc.WithConnectParams(grpc.ConnectParams{
+		Backoff: backoff.Config{
+			BaseDelay:  100 * time.Millisecond,
+			Multiplier: 1.2,
+			MaxDelay:   1 * time.Second,
+		},
+		MinConnectTimeout: 5 * time.Second,
+	})
+	api.ClientConn, err = grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithKeepaliveParams(kacp), connParams)
 	if err != nil {
 		return fmt.Errorf("failed to dial: %w", err)
 	}
