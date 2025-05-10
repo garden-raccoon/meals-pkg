@@ -141,6 +141,58 @@ func (x *Meals) GetMeals() []*Meal {
 	return nil
 }
 
+type Pagination struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Limit         int64                  `protobuf:"varint,1,opt,name=limit,proto3" json:"limit,omitempty"`
+	Offset        int64                  `protobuf:"varint,2,opt,name=offset,proto3" json:"offset,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Pagination) Reset() {
+	*x = Pagination{}
+	mi := &file_meals_pkg_models_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Pagination) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Pagination) ProtoMessage() {}
+
+func (x *Pagination) ProtoReflect() protoreflect.Message {
+	mi := &file_meals_pkg_models_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Pagination.ProtoReflect.Descriptor instead.
+func (*Pagination) Descriptor() ([]byte, []int) {
+	return file_meals_pkg_models_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *Pagination) GetLimit() int64 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+func (x *Pagination) GetOffset() int64 {
+	if x != nil {
+		return x.Offset
+	}
+	return 0
+}
+
 var File_meals_pkg_models_proto protoreflect.FileDescriptor
 
 const file_meals_pkg_models_proto_rawDesc = "" +
@@ -153,7 +205,11 @@ const file_meals_pkg_models_proto_rawDesc = "" +
 	"\x05price\x18\x04 \x01(\x02R\x05price\x12#\n" +
 	"\rmeal_settings\x18\x05 \x01(\fR\fmealSettings\"+\n" +
 	"\x05Meals\x12\"\n" +
-	"\x05Meals\x18\x01 \x03(\v2\f.models.MealR\x05MealsB\x15Z\x13protocols/meals-pkgb\x06proto3"
+	"\x05Meals\x18\x01 \x03(\v2\f.models.MealR\x05Meals\":\n" +
+	"\n" +
+	"Pagination\x12\x14\n" +
+	"\x05limit\x18\x01 \x01(\x03R\x05limit\x12\x16\n" +
+	"\x06offset\x18\x02 \x01(\x03R\x06offsetB\x15Z\x13protocols/meals-pkgb\x06proto3"
 
 var (
 	file_meals_pkg_models_proto_rawDescOnce sync.Once
@@ -167,10 +223,11 @@ func file_meals_pkg_models_proto_rawDescGZIP() []byte {
 	return file_meals_pkg_models_proto_rawDescData
 }
 
-var file_meals_pkg_models_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_meals_pkg_models_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_meals_pkg_models_proto_goTypes = []any{
-	(*Meal)(nil),  // 0: models.Meal
-	(*Meals)(nil), // 1: models.Meals
+	(*Meal)(nil),       // 0: models.Meal
+	(*Meals)(nil),      // 1: models.Meals
+	(*Pagination)(nil), // 2: models.Pagination
 }
 var file_meals_pkg_models_proto_depIdxs = []int32{
 	0, // 0: models.Meals.Meals:type_name -> models.Meal
@@ -192,7 +249,7 @@ func file_meals_pkg_models_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_meals_pkg_models_proto_rawDesc), len(file_meals_pkg_models_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

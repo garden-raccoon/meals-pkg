@@ -199,7 +199,7 @@ const file_meals_pkg_service_proto_rawDesc = "" +
 	"\x06getter2\x94\x02\n" +
 	"\fMealsService\x128\n" +
 	"\x13CreateOrUpdateMeals\x12\r.models.Meals\x1a\x12.models.MealsEmpty\x12-\n" +
-	"\bGetMeals\x12\x12.models.MealsEmpty\x1a\r.models.Meals\x12.\n" +
+	"\bGetMeals\x12\x12.models.Pagination\x1a\r.models.Meals\x12.\n" +
 	"\n" +
 	"MealByName\x12\x12.models.MealGetter\x1a\f.models.Meal\x122\n" +
 	"\x0eMealByMealUuid\x12\x12.models.MealGetter\x1a\f.models.Meal\x127\n" +
@@ -224,18 +224,19 @@ var file_meals_pkg_service_proto_goTypes = []any{
 	(*MealsEmpty)(nil),    // 1: models.MealsEmpty
 	(*MealGetter)(nil),    // 2: models.MealGetter
 	(*Meals)(nil),         // 3: models.Meals
-	(*Meal)(nil),          // 4: models.Meal
+	(*Pagination)(nil),    // 4: models.Pagination
+	(*Meal)(nil),          // 5: models.Meal
 }
 var file_meals_pkg_service_proto_depIdxs = []int32{
 	3, // 0: models.MealsService.CreateOrUpdateMeals:input_type -> models.Meals
-	1, // 1: models.MealsService.GetMeals:input_type -> models.MealsEmpty
+	4, // 1: models.MealsService.GetMeals:input_type -> models.Pagination
 	2, // 2: models.MealsService.MealByName:input_type -> models.MealGetter
 	2, // 3: models.MealsService.MealByMealUuid:input_type -> models.MealGetter
 	0, // 4: models.MealsService.DeleteMeal:input_type -> models.MealDeleteReq
 	1, // 5: models.MealsService.CreateOrUpdateMeals:output_type -> models.MealsEmpty
 	3, // 6: models.MealsService.GetMeals:output_type -> models.Meals
-	4, // 7: models.MealsService.MealByName:output_type -> models.Meal
-	4, // 8: models.MealsService.MealByMealUuid:output_type -> models.Meal
+	5, // 7: models.MealsService.MealByName:output_type -> models.Meal
+	5, // 8: models.MealsService.MealByMealUuid:output_type -> models.Meal
 	1, // 9: models.MealsService.DeleteMeal:output_type -> models.MealsEmpty
 	5, // [5:10] is the sub-list for method output_type
 	0, // [0:5] is the sub-list for method input_type

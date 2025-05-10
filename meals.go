@@ -20,7 +20,7 @@ import (
 
 type MealsPkgAPI interface {
 	CreateOrUpdateMeals(s []*models.Meal) error
-	GetMeals() ([]*models.Meal, error)
+	GetMeals(pag Pagination) ([]*models.Meal, error)
 	DeleteMeal(mealUuid uuid.UUID) error
 	MealByName(name string) (*models.Meal, error)
 	MealByMealUuid(mealUuid uuid.UUID) (*models.Meal, error)
@@ -66,13 +66,12 @@ func (api *Api) DeleteMeal(mealUuid uuid.UUID) error {
 	return nil
 }
 
-func (api *Api) GetMeals() ([]*models.Meal, error) {
+func (api *Api) GetMeals(pag Pagination) ([]*models.Meal, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), api.timeout)
 	defer cancel()
 
 	var resp *proto.Meals
-	empty := new(proto.MealsEmpty)
-	resp, err := api.MealsServiceClient.GetMeals(ctx, empty)
+	resp, err := api.MealsServiceClient.GetMeals(ctx, pag.Proto())
 	if err != nil {
 		return nil, fmt.Errorf("GetMeals api request: %w", err)
 	}
@@ -185,4 +184,17 @@ func (api *Api) HealthCheck() error {
 	}
 	//api.status = service.StatusHealthy
 	return nil
+}
+
+type Pagination struct {
+	Limit  int
+	Offset int
+}
+
+// Proto is
+func (p Pagination) Proto() *proto.Pagination {
+	return &proto.Pagination{
+		Limit:  int64(p.Limit),
+		Offset: int64(p.Offset),
+	}
 }
