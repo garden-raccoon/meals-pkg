@@ -20,7 +20,7 @@ import (
 
 type MealsPkgAPI interface {
 	CreateMeals(s []*models.Meal) error
-
+	UpdateMeal(u *models.UpdateMealRequest) (*models.Meal, error)
 	GetMeals(pag Pagination) ([]*models.Meal, error)
 	DeleteMeal(mealUuid uuid.UUID) error
 	MealByMealUuid(mealUuid uuid.UUID) (*models.Meal, error)
