@@ -13,11 +13,12 @@ type Meal struct {
 }
 type UpdateMealRequest struct {
 	MealUuid     uuid.UUID
+	SettingsKey  string
 	MealSettings any
 }
 
 func UpdateMealToProto(u *UpdateMealRequest) (*proto.UpdateMealReq, error) {
-	fields := &proto.UpdateMealReq{MealUuid: u.MealUuid.Bytes()}
+	fields := &proto.UpdateMealReq{MealUuid: u.MealUuid.Bytes(), SettingsKey: u.SettingsKey}
 	if u.MealSettings != nil {
 		b, err := json.Marshal(u.MealSettings)
 		if err != nil {

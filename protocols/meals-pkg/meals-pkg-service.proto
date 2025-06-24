@@ -25,5 +25,6 @@ message MealsEmpty {}
 
 message UpdateMealReq{
     bytes       meal_uuid                  = 1;
-    bytes           meal_settings          = 2;
+    bytes       meal_settings          = 2;
+    string      settings_key           = 3;
 }

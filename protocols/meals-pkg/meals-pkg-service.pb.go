@@ -149,6 +149,7 @@ type UpdateMealReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	MealUuid      []byte                 `protobuf:"bytes,1,opt,name=meal_uuid,json=mealUuid,proto3" json:"meal_uuid,omitempty"`
 	MealSettings  []byte                 `protobuf:"bytes,2,opt,name=meal_settings,json=mealSettings,proto3" json:"meal_settings,omitempty"`
+	SettingsKey   string                 `protobuf:"bytes,3,opt,name=settings_key,json=settingsKey,proto3" json:"settings_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -197,6 +198,13 @@ func (x *UpdateMealReq) GetMealSettings() []byte {
 	return nil
 }
 
+func (x *UpdateMealReq) GetSettingsKey() string {
+	if x != nil {
+		return x.SettingsKey
+	}
+	return ""
+}
+
 var File_meals_pkg_service_proto protoreflect.FileDescriptor
 
 const file_meals_pkg_service_proto_rawDesc = "" +
@@ -208,10 +216,11 @@ const file_meals_pkg_service_proto_rawDesc = "" +
 	"MealGetReq\x12\x1b\n" +
 	"\tmeal_uuid\x18\x01 \x01(\fR\bmealUuid\"\f\n" +
 	"\n" +
-	"MealsEmpty\"Q\n" +
+	"MealsEmpty\"t\n" +
 	"\rUpdateMealReq\x12\x1b\n" +
 	"\tmeal_uuid\x18\x01 \x01(\fR\bmealUuid\x12#\n" +
-	"\rmeal_settings\x18\x02 \x01(\fR\fmealSettings2\x8f\x02\n" +
+	"\rmeal_settings\x18\x02 \x01(\fR\fmealSettings\x12!\n" +
+	"\fsettings_key\x18\x03 \x01(\tR\vsettingsKey2\x8f\x02\n" +
 	"\fMealsService\x120\n" +
 	"\vCreateMeals\x12\r.models.Meals\x1a\x12.models.MealsEmpty\x12-\n" +
 	"\bGetMeals\x12\x12.models.Pagination\x1a\r.models.Meals\x122\n" +
