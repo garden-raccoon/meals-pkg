@@ -11,6 +11,23 @@ type Meal struct {
 	MealUuid     uuid.UUID `json:"meal_uuid"`
 	MealSettings any       `json:"meal_settings"`
 }
+type UpdateMealRequest struct {
+	MealUuid     uuid.UUID
+	MealSettings any
+}
+
+func UpdateMealToProto(u *UpdateMealRequest) (*proto.UpdateMealReq, error) {
+	fields := &proto.UpdateMealReq{MealUuid: u.MealUuid.Bytes()}
+	if u.MealSettings != nil {
+		b, err := json.Marshal(u.MealSettings)
+		if err != nil {
+			return nil, fmt.Errorf("marshalling meal settings failed: %v", err)
+		}
+		fields.MealSettings = b
+
+	}
+	return fields, nil
+}
 
 // Proto is
 func (mdb Meal) Proto() (*proto.Meal, error) {

@@ -7,10 +7,10 @@ import "meals-pkg-models.proto";
 
 // OrderService is
 service MealsService {
-    rpc CreateOrUpdateMeals(models.Meals) returns(MealsEmpty);
+    rpc CreateMeals(models.Meals) returns(MealsEmpty);
     rpc GetMeals(models.Pagination) returns(models.Meals);
     rpc MealByMealUuid(MealGetReq) returns(models.Meal);
-
+    rpc UpdateMeal(UpdateMealReq) returns(models.Meal);
     rpc DeleteMeal(MealDeleteReq) returns(MealsEmpty);
 
 }
@@ -23,3 +23,7 @@ message MealGetReq {
 }
 message MealsEmpty {}
 
+message UpdateMealReq{
+    bytes       meal_uuid                  = 1;
+    bytes           meal_settings          = 2;
+}
