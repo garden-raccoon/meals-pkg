@@ -9,8 +9,7 @@ import "meals-pkg-models.proto";
 service MealsService {
     rpc CreateOrUpdateMeals(models.Meals) returns(MealsEmpty);
     rpc GetMeals(models.Pagination) returns(models.Meals);
-    rpc MealByName(MealGetter) returns(models.Meal);
-    rpc MealByMealUuid(MealGetter) returns(models.Meal);
+    rpc MealByMealUuid(MealGetReq) returns(models.Meal);
 
     rpc DeleteMeal(MealDeleteReq) returns(MealsEmpty);
 
@@ -19,12 +18,8 @@ service MealsService {
 message MealDeleteReq {
     bytes meal_uuid = 1;
 }
-message MealsEmpty {}
-
-message MealGetter {
-    oneof getter {
-        bytes   uuid    = 1;
-        string  name    = 2;
-    }
+message MealGetReq {
+    bytes meal_uuid = 1;
 }
+message MealsEmpty {}
 

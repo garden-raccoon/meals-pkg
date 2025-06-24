@@ -8,10 +8,7 @@ import (
 )
 
 type Meal struct {
-	Name         string    `json:"name"`
-	Price        float64   `json:"price"`
 	MealUuid     uuid.UUID `json:"meal_uuid"`
-	Description  string    `json:"description"`
 	MealSettings any       `json:"meal_settings"`
 }
 
@@ -19,10 +16,7 @@ type Meal struct {
 func (mdb Meal) Proto() (*proto.Meal, error) {
 
 	meal := &proto.Meal{
-		MealUuid:    mdb.MealUuid.Bytes(),
-		Name:        mdb.Name,
-		Description: mdb.Description,
-		Price:       float32(mdb.Price),
+		MealUuid: mdb.MealUuid.Bytes(),
 	}
 	if mdb.MealSettings != nil {
 		b, err := json.Marshal(mdb.MealSettings)
@@ -37,10 +31,7 @@ func (mdb Meal) Proto() (*proto.Meal, error) {
 func MealFromProto(pb *proto.Meal) (*Meal, error) {
 
 	meal := &Meal{
-		Name:        pb.Name,
-		Price:       float64(pb.Price),
-		Description: pb.Description,
-		MealUuid:    uuid.FromBytesOrNil(pb.MealUuid),
+		MealUuid: uuid.FromBytesOrNil(pb.MealUuid),
 	}
 	if pb.MealSettings != nil {
 		var mealAny any

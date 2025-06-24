@@ -21,7 +21,6 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	MealsService_CreateOrUpdateMeals_FullMethodName = "/models.MealsService/CreateOrUpdateMeals"
 	MealsService_GetMeals_FullMethodName            = "/models.MealsService/GetMeals"
-	MealsService_MealByName_FullMethodName          = "/models.MealsService/MealByName"
 	MealsService_MealByMealUuid_FullMethodName      = "/models.MealsService/MealByMealUuid"
 	MealsService_DeleteMeal_FullMethodName          = "/models.MealsService/DeleteMeal"
 )
@@ -34,8 +33,7 @@ const (
 type MealsServiceClient interface {
 	CreateOrUpdateMeals(ctx context.Context, in *Meals, opts ...grpc.CallOption) (*MealsEmpty, error)
 	GetMeals(ctx context.Context, in *Pagination, opts ...grpc.CallOption) (*Meals, error)
-	MealByName(ctx context.Context, in *MealGetter, opts ...grpc.CallOption) (*Meal, error)
-	MealByMealUuid(ctx context.Context, in *MealGetter, opts ...grpc.CallOption) (*Meal, error)
+	MealByMealUuid(ctx context.Context, in *MealGetReq, opts ...grpc.CallOption) (*Meal, error)
 	DeleteMeal(ctx context.Context, in *MealDeleteReq, opts ...grpc.CallOption) (*MealsEmpty, error)
 }
 
@@ -67,17 +65,7 @@ func (c *mealsServiceClient) GetMeals(ctx context.Context, in *Pagination, opts 
 	return out, nil
 }
 
-func (c *mealsServiceClient) MealByName(ctx context.Context, in *MealGetter, opts ...grpc.CallOption) (*Meal, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Meal)
-	err := c.cc.Invoke(ctx, MealsService_MealByName_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *mealsServiceClient) MealByMealUuid(ctx context.Context, in *MealGetter, opts ...grpc.CallOption) (*Meal, error) {
+func (c *mealsServiceClient) MealByMealUuid(ctx context.Context, in *MealGetReq, opts ...grpc.CallOption) (*Meal, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Meal)
 	err := c.cc.Invoke(ctx, MealsService_MealByMealUuid_FullMethodName, in, out, cOpts...)
@@ -105,8 +93,7 @@ func (c *mealsServiceClient) DeleteMeal(ctx context.Context, in *MealDeleteReq, 
 type MealsServiceServer interface {
 	CreateOrUpdateMeals(context.Context, *Meals) (*MealsEmpty, error)
 	GetMeals(context.Context, *Pagination) (*Meals, error)
-	MealByName(context.Context, *MealGetter) (*Meal, error)
-	MealByMealUuid(context.Context, *MealGetter) (*Meal, error)
+	MealByMealUuid(context.Context, *MealGetReq) (*Meal, error)
 	DeleteMeal(context.Context, *MealDeleteReq) (*MealsEmpty, error)
 	mustEmbedUnimplementedMealsServiceServer()
 }
@@ -124,10 +111,7 @@ func (UnimplementedMealsServiceServer) CreateOrUpdateMeals(context.Context, *Mea
 func (UnimplementedMealsServiceServer) GetMeals(context.Context, *Pagination) (*Meals, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMeals not implemented")
 }
-func (UnimplementedMealsServiceServer) MealByName(context.Context, *MealGetter) (*Meal, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method MealByName not implemented")
-}
-func (UnimplementedMealsServiceServer) MealByMealUuid(context.Context, *MealGetter) (*Meal, error) {
+func (UnimplementedMealsServiceServer) MealByMealUuid(context.Context, *MealGetReq) (*Meal, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method MealByMealUuid not implemented")
 }
 func (UnimplementedMealsServiceServer) DeleteMeal(context.Context, *MealDeleteReq) (*MealsEmpty, error) {
@@ -190,26 +174,8 @@ func _MealsService_GetMeals_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MealsService_MealByName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MealGetter)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MealsServiceServer).MealByName(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: MealsService_MealByName_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MealsServiceServer).MealByName(ctx, req.(*MealGetter))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _MealsService_MealByMealUuid_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MealGetter)
+	in := new(MealGetReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -221,7 +187,7 @@ func _MealsService_MealByMealUuid_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: MealsService_MealByMealUuid_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MealsServiceServer).MealByMealUuid(ctx, req.(*MealGetter))
+		return srv.(MealsServiceServer).MealByMealUuid(ctx, req.(*MealGetReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -258,10 +224,6 @@ var MealsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetMeals",
 			Handler:    _MealsService_GetMeals_Handler,
-		},
-		{
-			MethodName: "MealByName",
-			Handler:    _MealsService_MealByName_Handler,
 		},
 		{
 			MethodName: "MealByMealUuid",

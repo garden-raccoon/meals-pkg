@@ -65,6 +65,50 @@ func (x *MealDeleteReq) GetMealUuid() []byte {
 	return nil
 }
 
+type MealGetReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	MealUuid      []byte                 `protobuf:"bytes,1,opt,name=meal_uuid,json=mealUuid,proto3" json:"meal_uuid,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MealGetReq) Reset() {
+	*x = MealGetReq{}
+	mi := &file_meals_pkg_service_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MealGetReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MealGetReq) ProtoMessage() {}
+
+func (x *MealGetReq) ProtoReflect() protoreflect.Message {
+	mi := &file_meals_pkg_service_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MealGetReq.ProtoReflect.Descriptor instead.
+func (*MealGetReq) Descriptor() ([]byte, []int) {
+	return file_meals_pkg_service_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *MealGetReq) GetMealUuid() []byte {
+	if x != nil {
+		return x.MealUuid
+	}
+	return nil
+}
+
 type MealsEmpty struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -73,7 +117,7 @@ type MealsEmpty struct {
 
 func (x *MealsEmpty) Reset() {
 	*x = MealsEmpty{}
-	mi := &file_meals_pkg_service_proto_msgTypes[1]
+	mi := &file_meals_pkg_service_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -85,7 +129,7 @@ func (x *MealsEmpty) String() string {
 func (*MealsEmpty) ProtoMessage() {}
 
 func (x *MealsEmpty) ProtoReflect() protoreflect.Message {
-	mi := &file_meals_pkg_service_proto_msgTypes[1]
+	mi := &file_meals_pkg_service_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -98,90 +142,8 @@ func (x *MealsEmpty) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MealsEmpty.ProtoReflect.Descriptor instead.
 func (*MealsEmpty) Descriptor() ([]byte, []int) {
-	return file_meals_pkg_service_proto_rawDescGZIP(), []int{1}
-}
-
-type MealGetter struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Types that are valid to be assigned to Getter:
-	//
-	//	*MealGetter_Uuid
-	//	*MealGetter_Name
-	Getter        isMealGetter_Getter `protobuf_oneof:"getter"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *MealGetter) Reset() {
-	*x = MealGetter{}
-	mi := &file_meals_pkg_service_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *MealGetter) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*MealGetter) ProtoMessage() {}
-
-func (x *MealGetter) ProtoReflect() protoreflect.Message {
-	mi := &file_meals_pkg_service_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use MealGetter.ProtoReflect.Descriptor instead.
-func (*MealGetter) Descriptor() ([]byte, []int) {
 	return file_meals_pkg_service_proto_rawDescGZIP(), []int{2}
 }
-
-func (x *MealGetter) GetGetter() isMealGetter_Getter {
-	if x != nil {
-		return x.Getter
-	}
-	return nil
-}
-
-func (x *MealGetter) GetUuid() []byte {
-	if x != nil {
-		if x, ok := x.Getter.(*MealGetter_Uuid); ok {
-			return x.Uuid
-		}
-	}
-	return nil
-}
-
-func (x *MealGetter) GetName() string {
-	if x != nil {
-		if x, ok := x.Getter.(*MealGetter_Name); ok {
-			return x.Name
-		}
-	}
-	return ""
-}
-
-type isMealGetter_Getter interface {
-	isMealGetter_Getter()
-}
-
-type MealGetter_Uuid struct {
-	Uuid []byte `protobuf:"bytes,1,opt,name=uuid,proto3,oneof"`
-}
-
-type MealGetter_Name struct {
-	Name string `protobuf:"bytes,2,opt,name=name,proto3,oneof"`
-}
-
-func (*MealGetter_Uuid) isMealGetter_Getter() {}
-
-func (*MealGetter_Name) isMealGetter_Getter() {}
 
 var File_meals_pkg_service_proto protoreflect.FileDescriptor
 
@@ -189,20 +151,16 @@ const file_meals_pkg_service_proto_rawDesc = "" +
 	"\n" +
 	"\x17meals-pkg-service.proto\x12\x06models\x1a\x16meals-pkg-models.proto\",\n" +
 	"\rMealDeleteReq\x12\x1b\n" +
+	"\tmeal_uuid\x18\x01 \x01(\fR\bmealUuid\")\n" +
+	"\n" +
+	"MealGetReq\x12\x1b\n" +
 	"\tmeal_uuid\x18\x01 \x01(\fR\bmealUuid\"\f\n" +
 	"\n" +
-	"MealsEmpty\"B\n" +
-	"\n" +
-	"MealGetter\x12\x14\n" +
-	"\x04uuid\x18\x01 \x01(\fH\x00R\x04uuid\x12\x14\n" +
-	"\x04name\x18\x02 \x01(\tH\x00R\x04nameB\b\n" +
-	"\x06getter2\x94\x02\n" +
+	"MealsEmpty2\xe4\x01\n" +
 	"\fMealsService\x128\n" +
 	"\x13CreateOrUpdateMeals\x12\r.models.Meals\x1a\x12.models.MealsEmpty\x12-\n" +
-	"\bGetMeals\x12\x12.models.Pagination\x1a\r.models.Meals\x12.\n" +
-	"\n" +
-	"MealByName\x12\x12.models.MealGetter\x1a\f.models.Meal\x122\n" +
-	"\x0eMealByMealUuid\x12\x12.models.MealGetter\x1a\f.models.Meal\x127\n" +
+	"\bGetMeals\x12\x12.models.Pagination\x1a\r.models.Meals\x122\n" +
+	"\x0eMealByMealUuid\x12\x12.models.MealGetReq\x1a\f.models.Meal\x127\n" +
 	"\n" +
 	"DeleteMeal\x12\x15.models.MealDeleteReq\x1a\x12.models.MealsEmptyB\x15Z\x13protocols/meals-pkgb\x06proto3"
 
@@ -221,8 +179,8 @@ func file_meals_pkg_service_proto_rawDescGZIP() []byte {
 var file_meals_pkg_service_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_meals_pkg_service_proto_goTypes = []any{
 	(*MealDeleteReq)(nil), // 0: models.MealDeleteReq
-	(*MealsEmpty)(nil),    // 1: models.MealsEmpty
-	(*MealGetter)(nil),    // 2: models.MealGetter
+	(*MealGetReq)(nil),    // 1: models.MealGetReq
+	(*MealsEmpty)(nil),    // 2: models.MealsEmpty
 	(*Meals)(nil),         // 3: models.Meals
 	(*Pagination)(nil),    // 4: models.Pagination
 	(*Meal)(nil),          // 5: models.Meal
@@ -230,16 +188,14 @@ var file_meals_pkg_service_proto_goTypes = []any{
 var file_meals_pkg_service_proto_depIdxs = []int32{
 	3, // 0: models.MealsService.CreateOrUpdateMeals:input_type -> models.Meals
 	4, // 1: models.MealsService.GetMeals:input_type -> models.Pagination
-	2, // 2: models.MealsService.MealByName:input_type -> models.MealGetter
-	2, // 3: models.MealsService.MealByMealUuid:input_type -> models.MealGetter
-	0, // 4: models.MealsService.DeleteMeal:input_type -> models.MealDeleteReq
-	1, // 5: models.MealsService.CreateOrUpdateMeals:output_type -> models.MealsEmpty
-	3, // 6: models.MealsService.GetMeals:output_type -> models.Meals
-	5, // 7: models.MealsService.MealByName:output_type -> models.Meal
-	5, // 8: models.MealsService.MealByMealUuid:output_type -> models.Meal
-	1, // 9: models.MealsService.DeleteMeal:output_type -> models.MealsEmpty
-	5, // [5:10] is the sub-list for method output_type
-	0, // [0:5] is the sub-list for method input_type
+	1, // 2: models.MealsService.MealByMealUuid:input_type -> models.MealGetReq
+	0, // 3: models.MealsService.DeleteMeal:input_type -> models.MealDeleteReq
+	2, // 4: models.MealsService.CreateOrUpdateMeals:output_type -> models.MealsEmpty
+	3, // 5: models.MealsService.GetMeals:output_type -> models.Meals
+	5, // 6: models.MealsService.MealByMealUuid:output_type -> models.Meal
+	2, // 7: models.MealsService.DeleteMeal:output_type -> models.MealsEmpty
+	4, // [4:8] is the sub-list for method output_type
+	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -251,10 +207,6 @@ func file_meals_pkg_service_proto_init() {
 		return
 	}
 	file_meals_pkg_models_proto_init()
-	file_meals_pkg_service_proto_msgTypes[2].OneofWrappers = []any{
-		(*MealGetter_Uuid)(nil),
-		(*MealGetter_Name)(nil),
-	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

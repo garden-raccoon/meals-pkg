@@ -24,10 +24,7 @@ const (
 type Meal struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	MealUuid      []byte                 `protobuf:"bytes,1,opt,name=meal_uuid,json=mealUuid,proto3" json:"meal_uuid,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	Price         float32                `protobuf:"fixed32,4,opt,name=price,proto3" json:"price,omitempty"`
-	MealSettings  []byte                 `protobuf:"bytes,5,opt,name=meal_settings,json=mealSettings,proto3" json:"meal_settings,omitempty"`
+	MealSettings  []byte                 `protobuf:"bytes,2,opt,name=meal_settings,json=mealSettings,proto3" json:"meal_settings,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -67,27 +64,6 @@ func (x *Meal) GetMealUuid() []byte {
 		return x.MealUuid
 	}
 	return nil
-}
-
-func (x *Meal) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *Meal) GetDescription() string {
-	if x != nil {
-		return x.Description
-	}
-	return ""
-}
-
-func (x *Meal) GetPrice() float32 {
-	if x != nil {
-		return x.Price
-	}
-	return 0
 }
 
 func (x *Meal) GetMealSettings() []byte {
@@ -197,13 +173,10 @@ var File_meals_pkg_models_proto protoreflect.FileDescriptor
 
 const file_meals_pkg_models_proto_rawDesc = "" +
 	"\n" +
-	"\x16meals-pkg-models.proto\x12\x06models\"\x94\x01\n" +
+	"\x16meals-pkg-models.proto\x12\x06models\"H\n" +
 	"\x04Meal\x12\x1b\n" +
-	"\tmeal_uuid\x18\x01 \x01(\fR\bmealUuid\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x14\n" +
-	"\x05price\x18\x04 \x01(\x02R\x05price\x12#\n" +
-	"\rmeal_settings\x18\x05 \x01(\fR\fmealSettings\"+\n" +
+	"\tmeal_uuid\x18\x01 \x01(\fR\bmealUuid\x12#\n" +
+	"\rmeal_settings\x18\x02 \x01(\fR\fmealSettings\"+\n" +
 	"\x05Meals\x12\"\n" +
 	"\x05Meals\x18\x01 \x03(\v2\f.models.MealR\x05Meals\":\n" +
 	"\n" +

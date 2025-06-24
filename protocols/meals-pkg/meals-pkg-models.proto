@@ -5,10 +5,7 @@ option go_package = "protocols/meals-pkg";
 
 message Meal {
     bytes           meal_uuid        = 1;
-    string          name        = 2;
-    string          description = 3;
-    float           price       = 4;
-    bytes           meal_settings = 5;
+    bytes           meal_settings = 2;
 }
 
 message Meals{
