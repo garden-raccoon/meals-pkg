@@ -19,11 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	MealsService_CreateMeals_FullMethodName    = "/models.MealsService/CreateMeals"
-	MealsService_GetMeals_FullMethodName       = "/models.MealsService/GetMeals"
-	MealsService_MealByMealUuid_FullMethodName = "/models.MealsService/MealByMealUuid"
-	MealsService_UpdateMeal_FullMethodName     = "/models.MealsService/UpdateMeal"
-	MealsService_DeleteMeal_FullMethodName     = "/models.MealsService/DeleteMeal"
+	MealsService_CreateMeals_FullMethodName       = "/models.MealsService/CreateMeals"
+	MealsService_GetMeals_FullMethodName          = "/models.MealsService/GetMeals"
+	MealsService_MealByMealUuid_FullMethodName    = "/models.MealsService/MealByMealUuid"
+	MealsService_UpdateMeal_FullMethodName        = "/models.MealsService/UpdateMeal"
+	MealsService_DeleteMeal_FullMethodName        = "/models.MealsService/DeleteMeal"
+	MealsService_DeleteSettingsKey_FullMethodName = "/models.MealsService/DeleteSettingsKey"
 )
 
 // MealsServiceClient is the client API for MealsService service.
@@ -37,6 +38,7 @@ type MealsServiceClient interface {
 	MealByMealUuid(ctx context.Context, in *MealGetReq, opts ...grpc.CallOption) (*Meal, error)
 	UpdateMeal(ctx context.Context, in *UpdateMealReq, opts ...grpc.CallOption) (*MealsEmpty, error)
 	DeleteMeal(ctx context.Context, in *MealDeleteReq, opts ...grpc.CallOption) (*MealsEmpty, error)
+	DeleteSettingsKey(ctx context.Context, in *MealDeleteSettingKeyReq, opts ...grpc.CallOption) (*MealsEmpty, error)
 }
 
 type mealsServiceClient struct {
@@ -97,6 +99,16 @@ func (c *mealsServiceClient) DeleteMeal(ctx context.Context, in *MealDeleteReq, 
 	return out, nil
 }
 
+func (c *mealsServiceClient) DeleteSettingsKey(ctx context.Context, in *MealDeleteSettingKeyReq, opts ...grpc.CallOption) (*MealsEmpty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MealsEmpty)
+	err := c.cc.Invoke(ctx, MealsService_DeleteSettingsKey_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MealsServiceServer is the server API for MealsService service.
 // All implementations must embed UnimplementedMealsServiceServer
 // for forward compatibility.
@@ -108,6 +120,7 @@ type MealsServiceServer interface {
 	MealByMealUuid(context.Context, *MealGetReq) (*Meal, error)
 	UpdateMeal(context.Context, *UpdateMealReq) (*MealsEmpty, error)
 	DeleteMeal(context.Context, *MealDeleteReq) (*MealsEmpty, error)
+	DeleteSettingsKey(context.Context, *MealDeleteSettingKeyReq) (*MealsEmpty, error)
 	mustEmbedUnimplementedMealsServiceServer()
 }
 
@@ -132,6 +145,9 @@ func (UnimplementedMealsServiceServer) UpdateMeal(context.Context, *UpdateMealRe
 }
 func (UnimplementedMealsServiceServer) DeleteMeal(context.Context, *MealDeleteReq) (*MealsEmpty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteMeal not implemented")
+}
+func (UnimplementedMealsServiceServer) DeleteSettingsKey(context.Context, *MealDeleteSettingKeyReq) (*MealsEmpty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteSettingsKey not implemented")
 }
 func (UnimplementedMealsServiceServer) mustEmbedUnimplementedMealsServiceServer() {}
 func (UnimplementedMealsServiceServer) testEmbeddedByValue()                      {}
@@ -244,6 +260,24 @@ func _MealsService_DeleteMeal_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MealsService_DeleteSettingsKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MealDeleteSettingKeyReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MealsServiceServer).DeleteSettingsKey(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MealsService_DeleteSettingsKey_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MealsServiceServer).DeleteSettingsKey(ctx, req.(*MealDeleteSettingKeyReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MealsService_ServiceDesc is the grpc.ServiceDesc for MealsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -270,6 +304,10 @@ var MealsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteMeal",
 			Handler:    _MealsService_DeleteMeal_Handler,
+		},
+		{
+			MethodName: "DeleteSettingsKey",
+			Handler:    _MealsService_DeleteSettingsKey_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -16,7 +16,17 @@ type UpdateMealRequest struct {
 	SettingsKey   string
 	SettingsValue any
 }
+type DeleteSettingsKeyRequest struct {
+	MealUuid    uuid.UUID
+	SettingsKey string
+}
 
+func DeleteSettingsKeyToProto(d *DeleteSettingsKeyRequest) *proto.MealDeleteSettingKeyReq {
+	return &proto.MealDeleteSettingKeyReq{
+		MealUuid:    d.MealUuid.Bytes(),
+		SettingsKey: d.SettingsKey,
+	}
+}
 func UpdateMealToProto(u *UpdateMealRequest) (*proto.UpdateMealReq, error) {
 	fields := &proto.UpdateMealReq{MealUuid: u.MealUuid.Bytes(), SettingsKey: u.SettingsKey}
 	if u.SettingsValue != nil {

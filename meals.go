@@ -21,6 +21,7 @@ import (
 type MealsPkgAPI interface {
 	CreateMeals(s []*models.Meal) error
 	UpdateMeal(u *models.UpdateMealRequest) error
+	DeleteSettingsKey(d *models.DeleteSettingsKeyRequest) error
 	GetMeals(pag Pagination) ([]*models.Meal, error)
 	DeleteMeal(mealUuid uuid.UUID) error
 	MealByMealUuid(mealUuid uuid.UUID) (*models.Meal, error)
@@ -51,6 +52,18 @@ func New(addr string, timeout time.Duration) (MealsPkgAPI, error) {
 
 	api.MealsServiceClient = proto.NewMealsServiceClient(api.ClientConn)
 	return api, nil
+}
+
+func (api *Api) DeleteSettingsKey(d *models.DeleteSettingsKeyRequest) error {
+	ctx, cancel := context.WithTimeout(context.Background(), api.timeout)
+	defer cancel()
+	req := models.DeleteSettingsKeyToProto(d)
+
+	_, err := api.MealsServiceClient.DeleteSettingsKey(ctx, req)
+	if err != nil {
+		return fmt.Errorf("update meal api request: %w", err)
+	}
+	return nil
 }
 
 func (api *Api) UpdateMeal(u *models.UpdateMealRequest) error {

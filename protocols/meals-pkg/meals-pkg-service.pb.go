@@ -205,6 +205,58 @@ func (x *UpdateMealReq) GetSettingsValue() []byte {
 	return nil
 }
 
+type MealDeleteSettingKeyReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	MealUuid      []byte                 `protobuf:"bytes,1,opt,name=meal_uuid,json=mealUuid,proto3" json:"meal_uuid,omitempty"`
+	SettingsKey   string                 `protobuf:"bytes,2,opt,name=settings_key,json=settingsKey,proto3" json:"settings_key,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MealDeleteSettingKeyReq) Reset() {
+	*x = MealDeleteSettingKeyReq{}
+	mi := &file_meals_pkg_service_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MealDeleteSettingKeyReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MealDeleteSettingKeyReq) ProtoMessage() {}
+
+func (x *MealDeleteSettingKeyReq) ProtoReflect() protoreflect.Message {
+	mi := &file_meals_pkg_service_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MealDeleteSettingKeyReq.ProtoReflect.Descriptor instead.
+func (*MealDeleteSettingKeyReq) Descriptor() ([]byte, []int) {
+	return file_meals_pkg_service_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *MealDeleteSettingKeyReq) GetMealUuid() []byte {
+	if x != nil {
+		return x.MealUuid
+	}
+	return nil
+}
+
+func (x *MealDeleteSettingKeyReq) GetSettingsKey() string {
+	if x != nil {
+		return x.SettingsKey
+	}
+	return ""
+}
+
 var File_meals_pkg_service_proto protoreflect.FileDescriptor
 
 const file_meals_pkg_service_proto_rawDesc = "" +
@@ -220,7 +272,10 @@ const file_meals_pkg_service_proto_rawDesc = "" +
 	"\rUpdateMealReq\x12\x1b\n" +
 	"\tmeal_uuid\x18\x01 \x01(\fR\bmealUuid\x12!\n" +
 	"\fsettings_key\x18\x02 \x01(\tR\vsettingsKey\x12%\n" +
-	"\x0esettings_value\x18\x03 \x01(\fR\rsettingsValue2\x95\x02\n" +
+	"\x0esettings_value\x18\x03 \x01(\fR\rsettingsValue\"Y\n" +
+	"\x17MealDeleteSettingKeyReq\x12\x1b\n" +
+	"\tmeal_uuid\x18\x01 \x01(\fR\bmealUuid\x12!\n" +
+	"\fsettings_key\x18\x02 \x01(\tR\vsettingsKey2\xdf\x02\n" +
 	"\fMealsService\x120\n" +
 	"\vCreateMeals\x12\r.models.Meals\x1a\x12.models.MealsEmpty\x12-\n" +
 	"\bGetMeals\x12\x12.models.Pagination\x1a\r.models.Meals\x122\n" +
@@ -228,7 +283,8 @@ const file_meals_pkg_service_proto_rawDesc = "" +
 	"\n" +
 	"UpdateMeal\x12\x15.models.UpdateMealReq\x1a\x12.models.MealsEmpty\x127\n" +
 	"\n" +
-	"DeleteMeal\x12\x15.models.MealDeleteReq\x1a\x12.models.MealsEmptyB\x15Z\x13protocols/meals-pkgb\x06proto3"
+	"DeleteMeal\x12\x15.models.MealDeleteReq\x1a\x12.models.MealsEmpty\x12H\n" +
+	"\x11DeleteSettingsKey\x12\x1f.models.MealDeleteSettingKeyReq\x1a\x12.models.MealsEmptyB\x15Z\x13protocols/meals-pkgb\x06proto3"
 
 var (
 	file_meals_pkg_service_proto_rawDescOnce sync.Once
@@ -242,29 +298,32 @@ func file_meals_pkg_service_proto_rawDescGZIP() []byte {
 	return file_meals_pkg_service_proto_rawDescData
 }
 
-var file_meals_pkg_service_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_meals_pkg_service_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_meals_pkg_service_proto_goTypes = []any{
-	(*MealDeleteReq)(nil), // 0: models.MealDeleteReq
-	(*MealGetReq)(nil),    // 1: models.MealGetReq
-	(*MealsEmpty)(nil),    // 2: models.MealsEmpty
-	(*UpdateMealReq)(nil), // 3: models.UpdateMealReq
-	(*Meals)(nil),         // 4: models.Meals
-	(*Pagination)(nil),    // 5: models.Pagination
-	(*Meal)(nil),          // 6: models.Meal
+	(*MealDeleteReq)(nil),           // 0: models.MealDeleteReq
+	(*MealGetReq)(nil),              // 1: models.MealGetReq
+	(*MealsEmpty)(nil),              // 2: models.MealsEmpty
+	(*UpdateMealReq)(nil),           // 3: models.UpdateMealReq
+	(*MealDeleteSettingKeyReq)(nil), // 4: models.MealDeleteSettingKeyReq
+	(*Meals)(nil),                   // 5: models.Meals
+	(*Pagination)(nil),              // 6: models.Pagination
+	(*Meal)(nil),                    // 7: models.Meal
 }
 var file_meals_pkg_service_proto_depIdxs = []int32{
-	4, // 0: models.MealsService.CreateMeals:input_type -> models.Meals
-	5, // 1: models.MealsService.GetMeals:input_type -> models.Pagination
+	5, // 0: models.MealsService.CreateMeals:input_type -> models.Meals
+	6, // 1: models.MealsService.GetMeals:input_type -> models.Pagination
 	1, // 2: models.MealsService.MealByMealUuid:input_type -> models.MealGetReq
 	3, // 3: models.MealsService.UpdateMeal:input_type -> models.UpdateMealReq
 	0, // 4: models.MealsService.DeleteMeal:input_type -> models.MealDeleteReq
-	2, // 5: models.MealsService.CreateMeals:output_type -> models.MealsEmpty
-	4, // 6: models.MealsService.GetMeals:output_type -> models.Meals
-	6, // 7: models.MealsService.MealByMealUuid:output_type -> models.Meal
-	2, // 8: models.MealsService.UpdateMeal:output_type -> models.MealsEmpty
-	2, // 9: models.MealsService.DeleteMeal:output_type -> models.MealsEmpty
-	5, // [5:10] is the sub-list for method output_type
-	0, // [0:5] is the sub-list for method input_type
+	4, // 5: models.MealsService.DeleteSettingsKey:input_type -> models.MealDeleteSettingKeyReq
+	2, // 6: models.MealsService.CreateMeals:output_type -> models.MealsEmpty
+	5, // 7: models.MealsService.GetMeals:output_type -> models.Meals
+	7, // 8: models.MealsService.MealByMealUuid:output_type -> models.Meal
+	2, // 9: models.MealsService.UpdateMeal:output_type -> models.MealsEmpty
+	2, // 10: models.MealsService.DeleteMeal:output_type -> models.MealsEmpty
+	2, // 11: models.MealsService.DeleteSettingsKey:output_type -> models.MealsEmpty
+	6, // [6:12] is the sub-list for method output_type
+	0, // [0:6] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -282,7 +341,7 @@ func file_meals_pkg_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_meals_pkg_service_proto_rawDesc), len(file_meals_pkg_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
