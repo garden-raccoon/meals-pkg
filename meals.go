@@ -20,7 +20,7 @@ import (
 
 type MealsPkgAPI interface {
 	CreateMeals(s []*models.Meal) error
-	UpdateMeal(u *models.UpdateMealRequest) (*models.Meal, error)
+	UpdateMeal(u *models.UpdateMealRequest) error
 	GetMeals(pag Pagination) ([]*models.Meal, error)
 	DeleteMeal(mealUuid uuid.UUID) error
 	MealByMealUuid(mealUuid uuid.UUID) (*models.Meal, error)
@@ -53,15 +53,15 @@ func New(addr string, timeout time.Duration) (MealsPkgAPI, error) {
 	return api, nil
 }
 
-func (api *Api) UpdateMeal(u *models.UpdateMealRequest) (*models.Meal, error) {
+func (api *Api) UpdateMeal(u *models.UpdateMealRequest) error {
 	ctx, cancel := context.WithTimeout(context.Background(), api.timeout)
 	defer cancel()
 	pbMeal, err := models.UpdateMealToProto(u)
-	resp, err := api.MealsServiceClient.UpdateMeal(ctx, pbMeal)
+	_, err = api.MealsServiceClient.UpdateMeal(ctx, pbMeal)
 	if err != nil {
-		return nil, fmt.Errorf("UpdateAddress api request: %w", err)
+		return fmt.Errorf("update meal api request: %w", err)
 	}
-	return models.MealFromProto(resp)
+	return nil
 }
 func (api *Api) DeleteMeal(mealUuid uuid.UUID) error {
 	ctx, cancel := context.WithTimeout(context.Background(), api.timeout)

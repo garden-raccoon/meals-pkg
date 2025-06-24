@@ -10,7 +10,7 @@ service MealsService {
     rpc CreateMeals(models.Meals) returns(MealsEmpty);
     rpc GetMeals(models.Pagination) returns(models.Meals);
     rpc MealByMealUuid(MealGetReq) returns(models.Meal);
-    rpc UpdateMeal(UpdateMealReq) returns(models.Meal);
+    rpc UpdateMeal(UpdateMealReq) returns(MealsEmpty);
     rpc DeleteMeal(MealDeleteReq) returns(MealsEmpty);
 
 }
@@ -25,6 +25,6 @@ message MealsEmpty {}
 
 message UpdateMealReq{
     bytes       meal_uuid                  = 1;
-    bytes       meal_settings          = 2;
-    string      settings_key           = 3;
+    string       settings_key          = 2;
+    bytes      settings_value           = 3;
 }

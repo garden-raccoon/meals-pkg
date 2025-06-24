@@ -148,8 +148,8 @@ func (*MealsEmpty) Descriptor() ([]byte, []int) {
 type UpdateMealReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	MealUuid      []byte                 `protobuf:"bytes,1,opt,name=meal_uuid,json=mealUuid,proto3" json:"meal_uuid,omitempty"`
-	MealSettings  []byte                 `protobuf:"bytes,2,opt,name=meal_settings,json=mealSettings,proto3" json:"meal_settings,omitempty"`
-	SettingsKey   string                 `protobuf:"bytes,3,opt,name=settings_key,json=settingsKey,proto3" json:"settings_key,omitempty"`
+	SettingsKey   string                 `protobuf:"bytes,2,opt,name=settings_key,json=settingsKey,proto3" json:"settings_key,omitempty"`
+	SettingsValue []byte                 `protobuf:"bytes,3,opt,name=settings_value,json=settingsValue,proto3" json:"settings_value,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -191,18 +191,18 @@ func (x *UpdateMealReq) GetMealUuid() []byte {
 	return nil
 }
 
-func (x *UpdateMealReq) GetMealSettings() []byte {
-	if x != nil {
-		return x.MealSettings
-	}
-	return nil
-}
-
 func (x *UpdateMealReq) GetSettingsKey() string {
 	if x != nil {
 		return x.SettingsKey
 	}
 	return ""
+}
+
+func (x *UpdateMealReq) GetSettingsValue() []byte {
+	if x != nil {
+		return x.SettingsValue
+	}
+	return nil
 }
 
 var File_meals_pkg_service_proto protoreflect.FileDescriptor
@@ -216,17 +216,17 @@ const file_meals_pkg_service_proto_rawDesc = "" +
 	"MealGetReq\x12\x1b\n" +
 	"\tmeal_uuid\x18\x01 \x01(\fR\bmealUuid\"\f\n" +
 	"\n" +
-	"MealsEmpty\"t\n" +
+	"MealsEmpty\"v\n" +
 	"\rUpdateMealReq\x12\x1b\n" +
-	"\tmeal_uuid\x18\x01 \x01(\fR\bmealUuid\x12#\n" +
-	"\rmeal_settings\x18\x02 \x01(\fR\fmealSettings\x12!\n" +
-	"\fsettings_key\x18\x03 \x01(\tR\vsettingsKey2\x8f\x02\n" +
+	"\tmeal_uuid\x18\x01 \x01(\fR\bmealUuid\x12!\n" +
+	"\fsettings_key\x18\x02 \x01(\tR\vsettingsKey\x12%\n" +
+	"\x0esettings_value\x18\x03 \x01(\fR\rsettingsValue2\x95\x02\n" +
 	"\fMealsService\x120\n" +
 	"\vCreateMeals\x12\r.models.Meals\x1a\x12.models.MealsEmpty\x12-\n" +
 	"\bGetMeals\x12\x12.models.Pagination\x1a\r.models.Meals\x122\n" +
-	"\x0eMealByMealUuid\x12\x12.models.MealGetReq\x1a\f.models.Meal\x121\n" +
+	"\x0eMealByMealUuid\x12\x12.models.MealGetReq\x1a\f.models.Meal\x127\n" +
 	"\n" +
-	"UpdateMeal\x12\x15.models.UpdateMealReq\x1a\f.models.Meal\x127\n" +
+	"UpdateMeal\x12\x15.models.UpdateMealReq\x1a\x12.models.MealsEmpty\x127\n" +
 	"\n" +
 	"DeleteMeal\x12\x15.models.MealDeleteReq\x1a\x12.models.MealsEmptyB\x15Z\x13protocols/meals-pkgb\x06proto3"
 
@@ -261,7 +261,7 @@ var file_meals_pkg_service_proto_depIdxs = []int32{
 	2, // 5: models.MealsService.CreateMeals:output_type -> models.MealsEmpty
 	4, // 6: models.MealsService.GetMeals:output_type -> models.Meals
 	6, // 7: models.MealsService.MealByMealUuid:output_type -> models.Meal
-	6, // 8: models.MealsService.UpdateMeal:output_type -> models.Meal
+	2, // 8: models.MealsService.UpdateMeal:output_type -> models.MealsEmpty
 	2, // 9: models.MealsService.DeleteMeal:output_type -> models.MealsEmpty
 	5, // [5:10] is the sub-list for method output_type
 	0, // [0:5] is the sub-list for method input_type

@@ -12,19 +12,19 @@ type Meal struct {
 	MealSettings any       `json:"meal_settings"`
 }
 type UpdateMealRequest struct {
-	MealUuid     uuid.UUID
-	SettingsKey  string
-	MealSettings any
+	MealUuid      uuid.UUID
+	SettingsKey   string
+	SettingsValue any
 }
 
 func UpdateMealToProto(u *UpdateMealRequest) (*proto.UpdateMealReq, error) {
 	fields := &proto.UpdateMealReq{MealUuid: u.MealUuid.Bytes(), SettingsKey: u.SettingsKey}
-	if u.MealSettings != nil {
-		b, err := json.Marshal(u.MealSettings)
+	if u.SettingsValue != nil {
+		b, err := json.Marshal(u.SettingsValue)
 		if err != nil {
 			return nil, fmt.Errorf("marshalling meal settings failed: %v", err)
 		}
-		fields.MealSettings = b
+		fields.SettingsValue = b
 
 	}
 	return fields, nil

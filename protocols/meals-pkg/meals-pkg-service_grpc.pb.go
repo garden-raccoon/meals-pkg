@@ -35,7 +35,7 @@ type MealsServiceClient interface {
 	CreateMeals(ctx context.Context, in *Meals, opts ...grpc.CallOption) (*MealsEmpty, error)
 	GetMeals(ctx context.Context, in *Pagination, opts ...grpc.CallOption) (*Meals, error)
 	MealByMealUuid(ctx context.Context, in *MealGetReq, opts ...grpc.CallOption) (*Meal, error)
-	UpdateMeal(ctx context.Context, in *UpdateMealReq, opts ...grpc.CallOption) (*Meal, error)
+	UpdateMeal(ctx context.Context, in *UpdateMealReq, opts ...grpc.CallOption) (*MealsEmpty, error)
 	DeleteMeal(ctx context.Context, in *MealDeleteReq, opts ...grpc.CallOption) (*MealsEmpty, error)
 }
 
@@ -77,9 +77,9 @@ func (c *mealsServiceClient) MealByMealUuid(ctx context.Context, in *MealGetReq,
 	return out, nil
 }
 
-func (c *mealsServiceClient) UpdateMeal(ctx context.Context, in *UpdateMealReq, opts ...grpc.CallOption) (*Meal, error) {
+func (c *mealsServiceClient) UpdateMeal(ctx context.Context, in *UpdateMealReq, opts ...grpc.CallOption) (*MealsEmpty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Meal)
+	out := new(MealsEmpty)
 	err := c.cc.Invoke(ctx, MealsService_UpdateMeal_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -106,7 +106,7 @@ type MealsServiceServer interface {
 	CreateMeals(context.Context, *Meals) (*MealsEmpty, error)
 	GetMeals(context.Context, *Pagination) (*Meals, error)
 	MealByMealUuid(context.Context, *MealGetReq) (*Meal, error)
-	UpdateMeal(context.Context, *UpdateMealReq) (*Meal, error)
+	UpdateMeal(context.Context, *UpdateMealReq) (*MealsEmpty, error)
 	DeleteMeal(context.Context, *MealDeleteReq) (*MealsEmpty, error)
 	mustEmbedUnimplementedMealsServiceServer()
 }
@@ -127,7 +127,7 @@ func (UnimplementedMealsServiceServer) GetMeals(context.Context, *Pagination) (*
 func (UnimplementedMealsServiceServer) MealByMealUuid(context.Context, *MealGetReq) (*Meal, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method MealByMealUuid not implemented")
 }
-func (UnimplementedMealsServiceServer) UpdateMeal(context.Context, *UpdateMealReq) (*Meal, error) {
+func (UnimplementedMealsServiceServer) UpdateMeal(context.Context, *UpdateMealReq) (*MealsEmpty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateMeal not implemented")
 }
 func (UnimplementedMealsServiceServer) DeleteMeal(context.Context, *MealDeleteReq) (*MealsEmpty, error) {
