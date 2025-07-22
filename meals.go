@@ -19,12 +19,12 @@ import (
 )
 
 type MealsPkgAPI interface {
-	CreateMeals(s []*models.Meal) error
-	UpdateMeal(u *models.UpdateMealRequest) error
-	DeleteSettingsKey(d *models.DeleteSettingsKeyRequest) error
+	CreateOrUpdateMeals(s []*models.Meal) error
 	GetMeals(pag Pagination) ([]*models.Meal, error)
 	DeleteMeal(mealUuid uuid.UUID) error
+	MealByName(name string) (*models.Meal, error)
 	MealByMealUuid(mealUuid uuid.UUID) (*models.Meal, error)
+	MealsByLocation(req *proto.MealsByLocationReq, pag Pagination) ([]*models.Meal, error)
 	HealthCheck() error
 	// Close GRPC Api connection
 	Close() error
@@ -54,27 +54,15 @@ func New(addr string, timeout time.Duration) (MealsPkgAPI, error) {
 	return api, nil
 }
 
-func (api *Api) DeleteSettingsKey(d *models.DeleteSettingsKeyRequest) error {
+func (api *Api) MealsByLocation(req *proto.MealsByLocationReq, pag Pagination) ([]*models.Meal, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), api.timeout)
 	defer cancel()
-	req := models.DeleteSettingsKeyToProto(d)
-
-	_, err := api.MealsServiceClient.DeleteSettingsKey(ctx, req)
+	req.Pagination = pag.Proto()
+	resp, err := api.MealsServiceClient.MealsByLocation(ctx, req)
 	if err != nil {
-		return fmt.Errorf("update meal api request: %w", err)
+		return nil, fmt.Errorf("call MealsByLocation: %w", err)
 	}
-	return nil
-}
-
-func (api *Api) UpdateMeal(u *models.UpdateMealRequest) error {
-	ctx, cancel := context.WithTimeout(context.Background(), api.timeout)
-	defer cancel()
-	pbMeal, err := models.UpdateMealToProto(u)
-	_, err = api.MealsServiceClient.UpdateMeal(ctx, pbMeal)
-	if err != nil {
-		return fmt.Errorf("update meal api request: %w", err)
-	}
-	return nil
+	return models.MealsFromProto(resp), nil
 }
 func (api *Api) DeleteMeal(mealUuid uuid.UUID) error {
 	ctx, cancel := context.WithTimeout(context.Background(), api.timeout)
@@ -99,21 +87,17 @@ func (api *Api) GetMeals(pag Pagination) ([]*models.Meal, error) {
 		return nil, fmt.Errorf("GetMeals api request: %w", err)
 	}
 
-	meals, err := models.MealsFromProto(resp)
-	if err != nil {
-		return nil, fmt.Errorf("failed to GetMeals %w", err)
-	}
-	return meals, nil
+	return models.MealsFromProto(resp), nil
 }
 
-func (api *Api) CreateMeals(s []*models.Meal) (err error) {
+func (api *Api) CreateOrUpdateMeals(s []*models.Meal) (err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), api.timeout)
 	defer cancel()
 	meals, err := models.MealsToProto(s)
 	if err != nil {
 		return fmt.Errorf("failed to CreateOrUpdateMeals %w", err)
 	}
-	_, err = api.MealsServiceClient.CreateMeals(ctx, meals)
+	_, err = api.MealsServiceClient.CreateOrUpdateMeals(ctx, meals)
 	if err != nil {
 		return fmt.Errorf("create meals api request: %w", err)
 	}
@@ -142,24 +126,31 @@ func (api *Api) initConn(addr string) (err error) {
 	}
 	return
 }
-
+func (api *Api) MealByName(name string) (*models.Meal, error) {
+	ops := &proto.MealGetter{
+		GetterType: &proto.MealGetter_Name{
+			Name: name,
+		},
+	}
+	return api.getMeal(ops)
+}
 func (api *Api) MealByMealUuid(mealUuid uuid.UUID) (*models.Meal, error) {
+	ops := &proto.MealGetter{
+		GetterType: &proto.MealGetter_MealUuid{
+			MealUuid: mealUuid.Bytes(),
+		},
+	}
+	return api.getMeal(ops)
+}
+func (api *Api) getMeal(getter *proto.MealGetter) (*models.Meal, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), api.timeout)
 	defer cancel()
-	getReq := &proto.MealGetReq{
-		MealUuid: mealUuid.Bytes(),
-	}
-	resp, err := api.MealsServiceClient.MealByMealUuid(ctx, getReq)
+	resp, err := api.MealsServiceClient.MealBy(ctx, getter)
 	if err != nil {
-		return nil, fmt.Errorf("MealAPI getMeal request failed: %w", err)
+		return nil, fmt.Errorf("MealAPI getMeals request failed: %w", err)
 	}
-	meal, err := models.MealFromProto(resp)
-	if err != nil {
-		return nil, fmt.Errorf("failed to getMeal %w", err)
-	}
-	return meal, nil
+	return models.MealFromProto(resp), nil
 }
-
 func (api *Api) HealthCheck() error {
 	ctx, cancel := context.WithTimeout(context.Background(), api.timeout)
 	defer cancel()

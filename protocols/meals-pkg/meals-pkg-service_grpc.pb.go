@@ -19,12 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	MealsService_CreateMeals_FullMethodName       = "/models.MealsService/CreateMeals"
-	MealsService_GetMeals_FullMethodName          = "/models.MealsService/GetMeals"
-	MealsService_MealByMealUuid_FullMethodName    = "/models.MealsService/MealByMealUuid"
-	MealsService_UpdateMeal_FullMethodName        = "/models.MealsService/UpdateMeal"
-	MealsService_DeleteMeal_FullMethodName        = "/models.MealsService/DeleteMeal"
-	MealsService_DeleteSettingsKey_FullMethodName = "/models.MealsService/DeleteSettingsKey"
+	MealsService_CreateOrUpdateMeals_FullMethodName = "/models.MealsService/CreateOrUpdateMeals"
+	MealsService_GetMeals_FullMethodName            = "/models.MealsService/GetMeals"
+	MealsService_MealBy_FullMethodName              = "/models.MealsService/MealBy"
+	MealsService_MealsByLocation_FullMethodName     = "/models.MealsService/MealsByLocation"
+	MealsService_UpdateMeal_FullMethodName          = "/models.MealsService/UpdateMeal"
+	MealsService_DeleteMeal_FullMethodName          = "/models.MealsService/DeleteMeal"
 )
 
 // MealsServiceClient is the client API for MealsService service.
@@ -33,12 +33,12 @@ const (
 //
 // OrderService is
 type MealsServiceClient interface {
-	CreateMeals(ctx context.Context, in *Meals, opts ...grpc.CallOption) (*MealsEmpty, error)
+	CreateOrUpdateMeals(ctx context.Context, in *Meals, opts ...grpc.CallOption) (*MealsEmpty, error)
 	GetMeals(ctx context.Context, in *Pagination, opts ...grpc.CallOption) (*Meals, error)
-	MealByMealUuid(ctx context.Context, in *MealGetReq, opts ...grpc.CallOption) (*Meal, error)
-	UpdateMeal(ctx context.Context, in *UpdateMealReq, opts ...grpc.CallOption) (*MealsEmpty, error)
+	MealBy(ctx context.Context, in *MealGetter, opts ...grpc.CallOption) (*Meal, error)
+	MealsByLocation(ctx context.Context, in *MealsByLocationReq, opts ...grpc.CallOption) (*Meals, error)
+	UpdateMeal(ctx context.Context, in *Meal, opts ...grpc.CallOption) (*MealsEmpty, error)
 	DeleteMeal(ctx context.Context, in *MealDeleteReq, opts ...grpc.CallOption) (*MealsEmpty, error)
-	DeleteSettingsKey(ctx context.Context, in *MealDeleteSettingKeyReq, opts ...grpc.CallOption) (*MealsEmpty, error)
 }
 
 type mealsServiceClient struct {
@@ -49,10 +49,10 @@ func NewMealsServiceClient(cc grpc.ClientConnInterface) MealsServiceClient {
 	return &mealsServiceClient{cc}
 }
 
-func (c *mealsServiceClient) CreateMeals(ctx context.Context, in *Meals, opts ...grpc.CallOption) (*MealsEmpty, error) {
+func (c *mealsServiceClient) CreateOrUpdateMeals(ctx context.Context, in *Meals, opts ...grpc.CallOption) (*MealsEmpty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MealsEmpty)
-	err := c.cc.Invoke(ctx, MealsService_CreateMeals_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, MealsService_CreateOrUpdateMeals_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -69,17 +69,27 @@ func (c *mealsServiceClient) GetMeals(ctx context.Context, in *Pagination, opts 
 	return out, nil
 }
 
-func (c *mealsServiceClient) MealByMealUuid(ctx context.Context, in *MealGetReq, opts ...grpc.CallOption) (*Meal, error) {
+func (c *mealsServiceClient) MealBy(ctx context.Context, in *MealGetter, opts ...grpc.CallOption) (*Meal, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Meal)
-	err := c.cc.Invoke(ctx, MealsService_MealByMealUuid_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, MealsService_MealBy_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *mealsServiceClient) UpdateMeal(ctx context.Context, in *UpdateMealReq, opts ...grpc.CallOption) (*MealsEmpty, error) {
+func (c *mealsServiceClient) MealsByLocation(ctx context.Context, in *MealsByLocationReq, opts ...grpc.CallOption) (*Meals, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Meals)
+	err := c.cc.Invoke(ctx, MealsService_MealsByLocation_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *mealsServiceClient) UpdateMeal(ctx context.Context, in *Meal, opts ...grpc.CallOption) (*MealsEmpty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MealsEmpty)
 	err := c.cc.Invoke(ctx, MealsService_UpdateMeal_FullMethodName, in, out, cOpts...)
@@ -99,28 +109,18 @@ func (c *mealsServiceClient) DeleteMeal(ctx context.Context, in *MealDeleteReq, 
 	return out, nil
 }
 
-func (c *mealsServiceClient) DeleteSettingsKey(ctx context.Context, in *MealDeleteSettingKeyReq, opts ...grpc.CallOption) (*MealsEmpty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MealsEmpty)
-	err := c.cc.Invoke(ctx, MealsService_DeleteSettingsKey_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // MealsServiceServer is the server API for MealsService service.
 // All implementations must embed UnimplementedMealsServiceServer
 // for forward compatibility.
 //
 // OrderService is
 type MealsServiceServer interface {
-	CreateMeals(context.Context, *Meals) (*MealsEmpty, error)
+	CreateOrUpdateMeals(context.Context, *Meals) (*MealsEmpty, error)
 	GetMeals(context.Context, *Pagination) (*Meals, error)
-	MealByMealUuid(context.Context, *MealGetReq) (*Meal, error)
-	UpdateMeal(context.Context, *UpdateMealReq) (*MealsEmpty, error)
+	MealBy(context.Context, *MealGetter) (*Meal, error)
+	MealsByLocation(context.Context, *MealsByLocationReq) (*Meals, error)
+	UpdateMeal(context.Context, *Meal) (*MealsEmpty, error)
 	DeleteMeal(context.Context, *MealDeleteReq) (*MealsEmpty, error)
-	DeleteSettingsKey(context.Context, *MealDeleteSettingKeyReq) (*MealsEmpty, error)
 	mustEmbedUnimplementedMealsServiceServer()
 }
 
@@ -131,23 +131,23 @@ type MealsServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedMealsServiceServer struct{}
 
-func (UnimplementedMealsServiceServer) CreateMeals(context.Context, *Meals) (*MealsEmpty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateMeals not implemented")
+func (UnimplementedMealsServiceServer) CreateOrUpdateMeals(context.Context, *Meals) (*MealsEmpty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateOrUpdateMeals not implemented")
 }
 func (UnimplementedMealsServiceServer) GetMeals(context.Context, *Pagination) (*Meals, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMeals not implemented")
 }
-func (UnimplementedMealsServiceServer) MealByMealUuid(context.Context, *MealGetReq) (*Meal, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method MealByMealUuid not implemented")
+func (UnimplementedMealsServiceServer) MealBy(context.Context, *MealGetter) (*Meal, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MealBy not implemented")
 }
-func (UnimplementedMealsServiceServer) UpdateMeal(context.Context, *UpdateMealReq) (*MealsEmpty, error) {
+func (UnimplementedMealsServiceServer) MealsByLocation(context.Context, *MealsByLocationReq) (*Meals, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MealsByLocation not implemented")
+}
+func (UnimplementedMealsServiceServer) UpdateMeal(context.Context, *Meal) (*MealsEmpty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateMeal not implemented")
 }
 func (UnimplementedMealsServiceServer) DeleteMeal(context.Context, *MealDeleteReq) (*MealsEmpty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteMeal not implemented")
-}
-func (UnimplementedMealsServiceServer) DeleteSettingsKey(context.Context, *MealDeleteSettingKeyReq) (*MealsEmpty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteSettingsKey not implemented")
 }
 func (UnimplementedMealsServiceServer) mustEmbedUnimplementedMealsServiceServer() {}
 func (UnimplementedMealsServiceServer) testEmbeddedByValue()                      {}
@@ -170,20 +170,20 @@ func RegisterMealsServiceServer(s grpc.ServiceRegistrar, srv MealsServiceServer)
 	s.RegisterService(&MealsService_ServiceDesc, srv)
 }
 
-func _MealsService_CreateMeals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _MealsService_CreateOrUpdateMeals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Meals)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MealsServiceServer).CreateMeals(ctx, in)
+		return srv.(MealsServiceServer).CreateOrUpdateMeals(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MealsService_CreateMeals_FullMethodName,
+		FullMethod: MealsService_CreateOrUpdateMeals_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MealsServiceServer).CreateMeals(ctx, req.(*Meals))
+		return srv.(MealsServiceServer).CreateOrUpdateMeals(ctx, req.(*Meals))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -206,26 +206,44 @@ func _MealsService_GetMeals_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MealsService_MealByMealUuid_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MealGetReq)
+func _MealsService_MealBy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MealGetter)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MealsServiceServer).MealByMealUuid(ctx, in)
+		return srv.(MealsServiceServer).MealBy(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MealsService_MealByMealUuid_FullMethodName,
+		FullMethod: MealsService_MealBy_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MealsServiceServer).MealByMealUuid(ctx, req.(*MealGetReq))
+		return srv.(MealsServiceServer).MealBy(ctx, req.(*MealGetter))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MealsService_MealsByLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MealsByLocationReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MealsServiceServer).MealsByLocation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MealsService_MealsByLocation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MealsServiceServer).MealsByLocation(ctx, req.(*MealsByLocationReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _MealsService_UpdateMeal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateMealReq)
+	in := new(Meal)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -237,7 +255,7 @@ func _MealsService_UpdateMeal_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: MealsService_UpdateMeal_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MealsServiceServer).UpdateMeal(ctx, req.(*UpdateMealReq))
+		return srv.(MealsServiceServer).UpdateMeal(ctx, req.(*Meal))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -260,24 +278,6 @@ func _MealsService_DeleteMeal_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MealsService_DeleteSettingsKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MealDeleteSettingKeyReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MealsServiceServer).DeleteSettingsKey(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: MealsService_DeleteSettingsKey_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MealsServiceServer).DeleteSettingsKey(ctx, req.(*MealDeleteSettingKeyReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // MealsService_ServiceDesc is the grpc.ServiceDesc for MealsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -286,16 +286,20 @@ var MealsService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*MealsServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateMeals",
-			Handler:    _MealsService_CreateMeals_Handler,
+			MethodName: "CreateOrUpdateMeals",
+			Handler:    _MealsService_CreateOrUpdateMeals_Handler,
 		},
 		{
 			MethodName: "GetMeals",
 			Handler:    _MealsService_GetMeals_Handler,
 		},
 		{
-			MethodName: "MealByMealUuid",
-			Handler:    _MealsService_MealByMealUuid_Handler,
+			MethodName: "MealBy",
+			Handler:    _MealsService_MealBy_Handler,
+		},
+		{
+			MethodName: "MealsByLocation",
+			Handler:    _MealsService_MealsByLocation_Handler,
 		},
 		{
 			MethodName: "UpdateMeal",
@@ -304,10 +308,6 @@ var MealsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteMeal",
 			Handler:    _MealsService_DeleteMeal_Handler,
-		},
-		{
-			MethodName: "DeleteSettingsKey",
-			Handler:    _MealsService_DeleteSettingsKey_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

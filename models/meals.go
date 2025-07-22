@@ -3,73 +3,94 @@ package models
 import (
 	"fmt"
 	proto "github.com/garden-raccoon/meals-pkg/protocols/meals-pkg"
-	"github.com/goccy/go-json"
 	"github.com/gofrs/uuid"
 )
 
 type Meal struct {
-	MealUuid     uuid.UUID `json:"meal_uuid"`
-	MealSettings any       `json:"meal_settings"`
-}
-type UpdateMealRequest struct {
-	MealUuid      uuid.UUID
-	SettingsKey   string
-	SettingsValue any
-}
-type DeleteSettingsKeyRequest struct {
-	MealUuid    uuid.UUID
-	SettingsKey string
+	MealUuid              uuid.UUID     `json:"meal_uuid"`
+	LocationUuid          uuid.UUID     `json:"location_uuid"`
+	Name                  string        `json:"name"`
+	Description           string        `json:"description"`
+	Category              string        `json:"category"`
+	Price                 float64       `json:"price"`
+	Tags                  []string      `json:"tags"`
+	MainIngredients       []*Ingredient `json:"main_ingredients"`
+	AdditionalIngredients []*Ingredient `json:"additional_ingredients"`
 }
 
-func DeleteSettingsKeyToProto(d *DeleteSettingsKeyRequest) *proto.MealDeleteSettingKeyReq {
-	return &proto.MealDeleteSettingKeyReq{
-		MealUuid:    d.MealUuid.Bytes(),
-		SettingsKey: d.SettingsKey,
+type Ingredient struct {
+	Name  string  `json:"name"`
+	Price float64 `json:"price"`
+}
+
+func NewIngredient(name string, price float64) *Ingredient {
+	return &Ingredient{
+		Name:  name,
+		Price: price,
 	}
 }
-func UpdateMealToProto(u *UpdateMealRequest) (*proto.UpdateMealReq, error) {
-	fields := &proto.UpdateMealReq{MealUuid: u.MealUuid.Bytes(), SettingsKey: u.SettingsKey}
-	if u.SettingsValue != nil {
-		b, err := json.Marshal(u.SettingsValue)
-		if err != nil {
-			return nil, fmt.Errorf("marshalling meal settings failed: %v", err)
-		}
-		fields.SettingsValue = b
 
+func (mdb Meal) IngredientsToProto(ingrs []*Ingredient) []*proto.Ingredient {
+	var ingredients []*proto.Ingredient
+	for i := range ingrs {
+		ingredients = append(ingredients, &proto.Ingredient{
+			Name:  ingrs[i].Name,
+			Price: float32(ingrs[i].Price),
+		})
 	}
-	return fields, nil
+	return ingredients
+}
+func IngredientsFromProto(ingrs []*proto.Ingredient) []*Ingredient {
+	var ingredients []*Ingredient
+	for i := range ingrs {
+		ingredients = append(ingredients, &Ingredient{
+			Name:  ingrs[i].Name,
+			Price: float64(ingrs[i].Price),
+		})
+	}
+	return ingredients
 }
 
 // Proto is
 func (mdb Meal) Proto() (*proto.Meal, error) {
 
 	meal := &proto.Meal{
-		MealUuid: mdb.MealUuid.Bytes(),
+		MealUuid:     mdb.MealUuid.Bytes(),
+		LocationUuid: mdb.LocationUuid.Bytes(),
+		Name:         mdb.Name,
+		Description:  mdb.Description,
+		Category:     mdb.Category,
+		Price:        float32(mdb.Price),
+		Tags:         mdb.Tags,
 	}
-	if mdb.MealSettings != nil {
-		b, err := json.Marshal(mdb.MealSettings)
-		if err != nil {
-			return nil, fmt.Errorf("failed to marshal meal settings %w", err)
-		}
-		meal.MealSettings = b
+	if mdb.MainIngredients != nil {
+		meal.MainIngredients = mdb.IngredientsToProto(mdb.MainIngredients)
 	}
+	if mdb.AdditionalIngredients != nil {
+		meal.AdditionalIngredients = mdb.IngredientsToProto(mdb.AdditionalIngredients)
+	}
+
 	return meal, nil
 }
 
-func MealFromProto(pb *proto.Meal) (*Meal, error) {
+func MealFromProto(pb *proto.Meal) *Meal {
 
 	meal := &Meal{
-		MealUuid: uuid.FromBytesOrNil(pb.MealUuid),
+		MealUuid:     uuid.FromBytesOrNil(pb.MealUuid),
+		LocationUuid: uuid.FromBytesOrNil(pb.LocationUuid),
+		Name:         pb.Name,
+		Description:  pb.Description,
+		Category:     pb.Category,
+		Price:        float64(pb.Price),
+		Tags:         pb.Tags,
 	}
-	if pb.MealSettings != nil {
-		var mealAny any
-		err := json.Unmarshal(pb.MealSettings, &mealAny)
-		if err != nil {
-			return nil, fmt.Errorf("failed to unmarshal meal settings %w", err)
-		}
-		meal.MealSettings = mealAny
+	if pb.MainIngredients != nil {
+		meal.MainIngredients = IngredientsFromProto(pb.MainIngredients)
 	}
-	return meal, nil
+	if pb.AdditionalIngredients != nil {
+		meal.AdditionalIngredients = IngredientsFromProto(pb.AdditionalIngredients)
+	}
+	return meal
 }
 
 func MealsToProto(meals []*Meal) (*proto.Meals, error) {
@@ -85,14 +106,11 @@ func MealsToProto(meals []*Meal) (*proto.Meals, error) {
 	return pb, nil
 }
 
-func MealsFromProto(pb *proto.Meals) ([]*Meal, error) {
+func MealsFromProto(pb *proto.Meals) []*Meal {
 	var meals []*Meal
 	for _, b := range pb.Meals {
-		meal, err := MealFromProto(b)
-		if err != nil {
-			return nil, fmt.Errorf("%w", err)
-		}
+		meal := MealFromProto(b)
 		meals = append(meals, meal)
 	}
-	return meals, nil
+	return meals
 }

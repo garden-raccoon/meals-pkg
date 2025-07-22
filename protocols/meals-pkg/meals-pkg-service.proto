@@ -7,29 +7,29 @@ import "meals-pkg-models.proto";
 
 // OrderService is
 service MealsService {
-    rpc CreateMeals(models.Meals) returns(MealsEmpty);
+    rpc CreateOrUpdateMeals(models.Meals) returns(MealsEmpty);
     rpc GetMeals(models.Pagination) returns(models.Meals);
-    rpc MealByMealUuid(MealGetReq) returns(models.Meal);
-    rpc UpdateMeal(UpdateMealReq) returns(MealsEmpty);
+    rpc MealBy(MealGetter) returns(models.Meal);
+    rpc MealsByLocation(MealsByLocationReq) returns(models.Meals);
+    rpc UpdateMeal(models.Meal) returns(MealsEmpty);
     rpc DeleteMeal(MealDeleteReq) returns(MealsEmpty);
-    rpc DeleteSettingsKey(MealDeleteSettingKeyReq) returns(MealsEmpty);
 }
+
 
 message MealDeleteReq {
     bytes meal_uuid = 1;
 }
-message MealGetReq {
-    bytes meal_uuid = 1;
+message MealGetter {
+   oneof getter_type {
+       bytes meal_uuid = 1;
+       string name = 2;
+   }
+}
+message MealsByLocationReq {
+    bytes location_uuid = 1;
+    models.Pagination Pagination = 2;
 }
 message MealsEmpty {}
 
-message UpdateMealReq{
-    bytes       meal_uuid                  = 1;
-    string       settings_key          = 2;
-    bytes      settings_value           = 3;
-}
 
-message MealDeleteSettingKeyReq {
-    bytes meal_uuid = 1;
-    string settings_key = 2;
-}
+
