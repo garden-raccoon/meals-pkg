@@ -13,6 +13,7 @@ type Meal struct {
 	Category              string        `json:"category"`
 	Price                 float64       `json:"price"`
 	Tags                  []string      `json:"tags"`
+	Weight                float64       `json:"weight"`
 	MainIngredients       []*Ingredient `json:"main_ingredients"`
 	AdditionalIngredients []*Ingredient `json:"additional_ingredients"`
 }
@@ -61,6 +62,7 @@ func (mdb Meal) Proto() *proto.Meal {
 		Category:     mdb.Category,
 		Price:        float32(mdb.Price),
 		Tags:         mdb.Tags,
+		Weight:       float32(mdb.Weight),
 	}
 	if mdb.MainIngredients != nil {
 		meal.MainIngredients = mdb.IngredientsToProto(mdb.MainIngredients)
@@ -82,6 +84,7 @@ func MealFromProto(pb *proto.Meal) *Meal {
 		Category:     pb.Category,
 		Price:        float64(pb.Price),
 		Tags:         pb.Tags,
+		Weight:       float64(pb.Weight),
 	}
 	if pb.MainIngredients != nil {
 		meal.MainIngredients = IngredientsFromProto(pb.MainIngredients)

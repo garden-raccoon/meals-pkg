@@ -32,6 +32,7 @@ type Meal struct {
 	AdditionalIngredients []*Ingredient          `protobuf:"bytes,7,rep,name=additional_ingredients,json=additionalIngredients,proto3" json:"additional_ingredients,omitempty"`
 	Price                 float32                `protobuf:"fixed32,8,opt,name=price,proto3" json:"price,omitempty"`
 	Tags                  []string               `protobuf:"bytes,9,rep,name=tags,proto3" json:"tags,omitempty"`
+	Weight                float32                `protobuf:"fixed32,10,opt,name=weight,proto3" json:"weight,omitempty"`
 	unknownFields         protoimpl.UnknownFields
 	sizeCache             protoimpl.SizeCache
 }
@@ -127,6 +128,13 @@ func (x *Meal) GetTags() []string {
 		return x.Tags
 	}
 	return nil
+}
+
+func (x *Meal) GetWeight() float32 {
+	if x != nil {
+		return x.Weight
+	}
+	return 0
 }
 
 type Ingredient struct {
@@ -281,7 +289,7 @@ var File_meals_pkg_models_proto protoreflect.FileDescriptor
 
 const file_meals_pkg_models_proto_rawDesc = "" +
 	"\n" +
-	"\x16meals-pkg-models.proto\x12\x06models\"\xce\x02\n" +
+	"\x16meals-pkg-models.proto\x12\x06models\"\xe6\x02\n" +
 	"\x04Meal\x12\x1b\n" +
 	"\tmeal_uuid\x18\x01 \x01(\fR\bmealUuid\x12#\n" +
 	"\rlocation_uuid\x18\x02 \x01(\fR\flocationUuid\x12\x12\n" +
@@ -291,7 +299,9 @@ const file_meals_pkg_models_proto_rawDesc = "" +
 	"\x10main_ingredients\x18\x06 \x03(\v2\x12.models.IngredientR\x0fmainIngredients\x12I\n" +
 	"\x16additional_ingredients\x18\a \x03(\v2\x12.models.IngredientR\x15additionalIngredients\x12\x14\n" +
 	"\x05price\x18\b \x01(\x02R\x05price\x12\x12\n" +
-	"\x04tags\x18\t \x03(\tR\x04tags\"6\n" +
+	"\x04tags\x18\t \x03(\tR\x04tags\x12\x16\n" +
+	"\x06weight\x18\n" +
+	" \x01(\x02R\x06weight\"6\n" +
 	"\n" +
 	"Ingredient\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x14\n" +

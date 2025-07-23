@@ -13,6 +13,7 @@ message Meal {
     repeated Ingredient additional_ingredients = 7;
     float price = 8;
     repeated string tags = 9;
+    float weight = 10;
 }
 
 message Ingredient {
