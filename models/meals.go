@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	proto "github.com/garden-raccoon/meals-pkg/protocols/meals-pkg"
 	"github.com/gofrs/uuid"
 )
@@ -52,7 +51,7 @@ func IngredientsFromProto(ingrs []*proto.Ingredient) []*Ingredient {
 }
 
 // Proto is
-func (mdb Meal) Proto() (*proto.Meal, error) {
+func (mdb Meal) Proto() *proto.Meal {
 
 	meal := &proto.Meal{
 		MealUuid:     mdb.MealUuid.Bytes(),
@@ -70,7 +69,7 @@ func (mdb Meal) Proto() (*proto.Meal, error) {
 		meal.AdditionalIngredients = mdb.IngredientsToProto(mdb.AdditionalIngredients)
 	}
 
-	return meal, nil
+	return meal
 }
 
 func MealFromProto(pb *proto.Meal) *Meal {
@@ -93,17 +92,14 @@ func MealFromProto(pb *proto.Meal) *Meal {
 	return meal
 }
 
-func MealsToProto(meals []*Meal) (*proto.Meals, error) {
+func MealsToProto(meals []*Meal) *proto.Meals {
 	pb := &proto.Meals{}
 
 	for _, b := range meals {
-		meal, err := b.Proto()
-		if err != nil {
-			return nil, fmt.Errorf("%w", err)
-		}
+		meal := b.Proto()
 		pb.Meals = append(pb.Meals, meal)
 	}
-	return pb, nil
+	return pb
 }
 
 func MealsFromProto(pb *proto.Meals) []*Meal {

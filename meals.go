@@ -93,10 +93,7 @@ func (api *Api) GetMeals(pag Pagination) ([]*models.Meal, error) {
 func (api *Api) CreateOrUpdateMeals(s []*models.Meal) (err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), api.timeout)
 	defer cancel()
-	meals, err := models.MealsToProto(s)
-	if err != nil {
-		return fmt.Errorf("failed to CreateOrUpdateMeals %w", err)
-	}
+	meals := models.MealsToProto(s)
 	_, err = api.MealsServiceClient.CreateOrUpdateMeals(ctx, meals)
 	if err != nil {
 		return fmt.Errorf("create meals api request: %w", err)
