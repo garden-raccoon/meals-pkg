@@ -23,6 +23,7 @@ type MealsPkgAPI interface {
 	GetMeals(pag Pagination) ([]*models.Meal, error)
 	DeleteMeal(mealUuid uuid.UUID) error
 	MealByName(name string) (*models.Meal, error)
+	UpdateMeal(meal *models.Meal) error
 	MealByMealUuid(mealUuid uuid.UUID) (*models.Meal, error)
 	MealsByLocation(req *proto.MealsByLocationReq, pag Pagination) ([]*models.Meal, error)
 	HealthCheck() error
@@ -52,6 +53,15 @@ func New(addr string, timeout time.Duration) (MealsPkgAPI, error) {
 
 	api.MealsServiceClient = proto.NewMealsServiceClient(api.ClientConn)
 	return api, nil
+}
+func (api *Api) UpdateMeal(meal *models.Meal) error {
+	ctx, cancel := context.WithTimeout(context.Background(), api.timeout)
+	defer cancel()
+	_, err := api.MealsServiceClient.UpdateMeal(ctx, meal.Proto())
+	if err != nil {
+		return fmt.Errorf("call MealsByLocation: %w", err)
+	}
+	return nil
 }
 
 func (api *Api) MealsByLocation(req *proto.MealsByLocationReq, pag Pagination) ([]*models.Meal, error) {
