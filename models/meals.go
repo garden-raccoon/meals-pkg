@@ -6,16 +6,20 @@ import (
 )
 
 type Meal struct {
-	MealUuid              uuid.UUID     `json:"meal_uuid"`
-	LocationUuid          uuid.UUID     `json:"location_uuid"`
-	Name                  string        `json:"name"`
-	Description           string        `json:"description"`
-	Category              *Category     `json:"category"`
-	Price                 float64       `json:"price"`
-	Tags                  []string      `json:"tags"`
-	Weight                float64       `json:"weight"`
-	MainIngredients       []*Ingredient `json:"main_ingredients"`
-	AdditionalIngredients []*Ingredient `json:"additional_ingredients"`
+	MealUuid              uuid.UUID        `json:"meal_uuid"`
+	LocationRequest       *LocationRequest `json:"location_request"`
+	Name                  string           `json:"name"`
+	Description           string           `json:"description"`
+	Category              *Category        `json:"category"`
+	Tags                  []string         `json:"tags"`
+	Weight                float64          `json:"weight"`
+	MainIngredients       []*Ingredient    `json:"main_ingredients"`
+	AdditionalIngredients []*Ingredient    `json:"additional_ingredients"`
+}
+type LocationRequest struct {
+	LocationUUID uuid.UUID `json:"location_uuid"`
+	IsAvailable  bool      `json:"is_available"`
+	Price        float64   `json:"price"`
 }
 type Category struct {
 	Name          string      `json:"name"`
@@ -58,12 +62,19 @@ func IngredientsFromProto(ingrs []*proto.Ingredient) []*Ingredient {
 func (mdb Meal) Proto() *proto.Meal {
 
 	meal := &proto.Meal{
-		MealUuid:     mdb.MealUuid.Bytes(),
-		LocationUuid: mdb.LocationUuid.Bytes(),
-		Name:         mdb.Name,
-		Description:  mdb.Description,
-		Tags:         mdb.Tags,
-		Weight:       float32(mdb.Weight),
+		MealUuid:    mdb.MealUuid.Bytes(),
+		Name:        mdb.Name,
+		Description: mdb.Description,
+		Tags:        mdb.Tags,
+		Weight:      float32(mdb.Weight),
+	}
+	if mdb.LocationRequest != nil {
+		meal.LocationRequest = &proto.LocationRequest{
+			LocationUuid: mdb.LocationRequest.LocationUUID.Bytes(),
+			IsAvailable:  mdb.LocationRequest.IsAvailable,
+			Price:        float32(mdb.LocationRequest.Price),
+		}
+
 	}
 	if mdb.Category != nil {
 		meal.Category = &proto.Category{
@@ -92,12 +103,18 @@ func (mdb Meal) Proto() *proto.Meal {
 func MealFromProto(pb *proto.Meal) *Meal {
 
 	meal := &Meal{
-		MealUuid:     uuid.FromBytesOrNil(pb.MealUuid),
-		LocationUuid: uuid.FromBytesOrNil(pb.LocationUuid),
-		Name:         pb.Name,
-		Description:  pb.Description,
-		Tags:         pb.Tags,
-		Weight:       float64(pb.Weight),
+		MealUuid:    uuid.FromBytesOrNil(pb.MealUuid),
+		Name:        pb.Name,
+		Description: pb.Description,
+		Tags:        pb.Tags,
+		Weight:      float64(pb.Weight),
+	}
+	if pb.LocationRequest != nil {
+		meal.LocationRequest = &LocationRequest{
+			LocationUUID: uuid.FromBytesOrNil(pb.LocationRequest.LocationUuid),
+			IsAvailable:  pb.LocationRequest.IsAvailable,
+			Price:        float64(pb.LocationRequest.Price),
+		}
 	}
 	if pb.Category != nil {
 		meal.Category = &Category{

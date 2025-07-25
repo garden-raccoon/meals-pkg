@@ -5,7 +5,7 @@ option go_package = "protocols/meals-pkg";
 
 message Meal {
     bytes           meal_uuid        = 1;
-    bytes           location_uuid    = 2;
+    LocationRequest location_request    = 2;
     string          name = 3;
     string          description =      4;
     Category          category =          5;
@@ -17,6 +17,12 @@ message Meal {
 message Category {
     repeated Category sub_categories =1;
     string name = 2;
+}
+message LocationRequest{
+    bytes location_uuid = 1;
+    bool is_available = 2;
+    float price = 3;
+
 }
 
 
