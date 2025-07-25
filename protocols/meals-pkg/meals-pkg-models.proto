@@ -8,13 +8,17 @@ message Meal {
     bytes           location_uuid    = 2;
     string          name = 3;
     string          description =      4;
-    string          category =          5;
+    Category          category =          5;
     repeated Ingredient main_ingredients = 6;
     repeated Ingredient additional_ingredients = 7;
-    float price = 8;
-    repeated string tags = 9;
-    float weight = 10;
+    repeated string tags = 8;
+    float weight = 9;
 }
+message Category {
+    repeated Category sub_categories =1;
+    string name = 2;
+}
+
 
 message Ingredient {
     string name = 1;
