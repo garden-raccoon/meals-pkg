@@ -184,7 +184,7 @@ func (x *Category) GetName() string {
 type LocationRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	LocationUuid  []byte                 `protobuf:"bytes,1,opt,name=location_uuid,json=locationUuid,proto3" json:"location_uuid,omitempty"`
-	IsAvailable   bool                   `protobuf:"varint,2,opt,name=is_available,json=isAvailable,proto3" json:"is_available,omitempty"`
+	Availability  *Availability          `protobuf:"bytes,2,opt,name=availability,proto3" json:"availability,omitempty"`
 	Price         float32                `protobuf:"fixed32,3,opt,name=price,proto3" json:"price,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -227,11 +227,11 @@ func (x *LocationRequest) GetLocationUuid() []byte {
 	return nil
 }
 
-func (x *LocationRequest) GetIsAvailable() bool {
+func (x *LocationRequest) GetAvailability() *Availability {
 	if x != nil {
-		return x.IsAvailable
+		return x.Availability
 	}
-	return false
+	return nil
 }
 
 func (x *LocationRequest) GetPrice() float32 {
@@ -239,6 +239,50 @@ func (x *LocationRequest) GetPrice() float32 {
 		return x.Price
 	}
 	return 0
+}
+
+type Availability struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	IsAvailable   bool                   `protobuf:"varint,1,opt,name=is_available,json=isAvailable,proto3" json:"is_available,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Availability) Reset() {
+	*x = Availability{}
+	mi := &file_meals_pkg_models_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Availability) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Availability) ProtoMessage() {}
+
+func (x *Availability) ProtoReflect() protoreflect.Message {
+	mi := &file_meals_pkg_models_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Availability.ProtoReflect.Descriptor instead.
+func (*Availability) Descriptor() ([]byte, []int) {
+	return file_meals_pkg_models_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *Availability) GetIsAvailable() bool {
+	if x != nil {
+		return x.IsAvailable
+	}
+	return false
 }
 
 type Ingredient struct {
@@ -251,7 +295,7 @@ type Ingredient struct {
 
 func (x *Ingredient) Reset() {
 	*x = Ingredient{}
-	mi := &file_meals_pkg_models_proto_msgTypes[3]
+	mi := &file_meals_pkg_models_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -263,7 +307,7 @@ func (x *Ingredient) String() string {
 func (*Ingredient) ProtoMessage() {}
 
 func (x *Ingredient) ProtoReflect() protoreflect.Message {
-	mi := &file_meals_pkg_models_proto_msgTypes[3]
+	mi := &file_meals_pkg_models_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -276,7 +320,7 @@ func (x *Ingredient) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Ingredient.ProtoReflect.Descriptor instead.
 func (*Ingredient) Descriptor() ([]byte, []int) {
-	return file_meals_pkg_models_proto_rawDescGZIP(), []int{3}
+	return file_meals_pkg_models_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *Ingredient) GetName() string {
@@ -302,7 +346,7 @@ type Meals struct {
 
 func (x *Meals) Reset() {
 	*x = Meals{}
-	mi := &file_meals_pkg_models_proto_msgTypes[4]
+	mi := &file_meals_pkg_models_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -314,7 +358,7 @@ func (x *Meals) String() string {
 func (*Meals) ProtoMessage() {}
 
 func (x *Meals) ProtoReflect() protoreflect.Message {
-	mi := &file_meals_pkg_models_proto_msgTypes[4]
+	mi := &file_meals_pkg_models_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -327,7 +371,7 @@ func (x *Meals) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Meals.ProtoReflect.Descriptor instead.
 func (*Meals) Descriptor() ([]byte, []int) {
-	return file_meals_pkg_models_proto_rawDescGZIP(), []int{4}
+	return file_meals_pkg_models_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *Meals) GetMeals() []*Meal {
@@ -347,7 +391,7 @@ type Pagination struct {
 
 func (x *Pagination) Reset() {
 	*x = Pagination{}
-	mi := &file_meals_pkg_models_proto_msgTypes[5]
+	mi := &file_meals_pkg_models_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -359,7 +403,7 @@ func (x *Pagination) String() string {
 func (*Pagination) ProtoMessage() {}
 
 func (x *Pagination) ProtoReflect() protoreflect.Message {
-	mi := &file_meals_pkg_models_proto_msgTypes[5]
+	mi := &file_meals_pkg_models_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -372,7 +416,7 @@ func (x *Pagination) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Pagination.ProtoReflect.Descriptor instead.
 func (*Pagination) Descriptor() ([]byte, []int) {
-	return file_meals_pkg_models_proto_rawDescGZIP(), []int{5}
+	return file_meals_pkg_models_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *Pagination) GetLimit() int64 {
@@ -406,11 +450,13 @@ const file_meals_pkg_models_proto_rawDesc = "" +
 	"\x06weight\x18\t \x01(\x02R\x06weight\"W\n" +
 	"\bCategory\x127\n" +
 	"\x0esub_categories\x18\x01 \x03(\v2\x10.models.CategoryR\rsubCategories\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\"o\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\"\x86\x01\n" +
 	"\x0fLocationRequest\x12#\n" +
-	"\rlocation_uuid\x18\x01 \x01(\fR\flocationUuid\x12!\n" +
-	"\fis_available\x18\x02 \x01(\bR\visAvailable\x12\x14\n" +
-	"\x05price\x18\x03 \x01(\x02R\x05price\"6\n" +
+	"\rlocation_uuid\x18\x01 \x01(\fR\flocationUuid\x128\n" +
+	"\favailability\x18\x02 \x01(\v2\x14.models.AvailabilityR\favailability\x12\x14\n" +
+	"\x05price\x18\x03 \x01(\x02R\x05price\"1\n" +
+	"\fAvailability\x12!\n" +
+	"\fis_available\x18\x01 \x01(\bR\visAvailable\"6\n" +
 	"\n" +
 	"Ingredient\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x14\n" +
@@ -434,27 +480,29 @@ func file_meals_pkg_models_proto_rawDescGZIP() []byte {
 	return file_meals_pkg_models_proto_rawDescData
 }
 
-var file_meals_pkg_models_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_meals_pkg_models_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_meals_pkg_models_proto_goTypes = []any{
 	(*Meal)(nil),            // 0: models.Meal
 	(*Category)(nil),        // 1: models.Category
 	(*LocationRequest)(nil), // 2: models.LocationRequest
-	(*Ingredient)(nil),      // 3: models.Ingredient
-	(*Meals)(nil),           // 4: models.Meals
-	(*Pagination)(nil),      // 5: models.Pagination
+	(*Availability)(nil),    // 3: models.Availability
+	(*Ingredient)(nil),      // 4: models.Ingredient
+	(*Meals)(nil),           // 5: models.Meals
+	(*Pagination)(nil),      // 6: models.Pagination
 }
 var file_meals_pkg_models_proto_depIdxs = []int32{
 	2, // 0: models.Meal.location_request:type_name -> models.LocationRequest
 	1, // 1: models.Meal.category:type_name -> models.Category
-	3, // 2: models.Meal.main_ingredients:type_name -> models.Ingredient
-	3, // 3: models.Meal.additional_ingredients:type_name -> models.Ingredient
+	4, // 2: models.Meal.main_ingredients:type_name -> models.Ingredient
+	4, // 3: models.Meal.additional_ingredients:type_name -> models.Ingredient
 	1, // 4: models.Category.sub_categories:type_name -> models.Category
-	0, // 5: models.Meals.Meals:type_name -> models.Meal
-	6, // [6:6] is the sub-list for method output_type
-	6, // [6:6] is the sub-list for method input_type
-	6, // [6:6] is the sub-list for extension type_name
-	6, // [6:6] is the sub-list for extension extendee
-	0, // [0:6] is the sub-list for field type_name
+	3, // 5: models.LocationRequest.availability:type_name -> models.Availability
+	0, // 6: models.Meals.Meals:type_name -> models.Meal
+	7, // [7:7] is the sub-list for method output_type
+	7, // [7:7] is the sub-list for method input_type
+	7, // [7:7] is the sub-list for extension type_name
+	7, // [7:7] is the sub-list for extension extendee
+	0, // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_meals_pkg_models_proto_init() }
@@ -468,7 +516,7 @@ func file_meals_pkg_models_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_meals_pkg_models_proto_rawDesc), len(file_meals_pkg_models_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

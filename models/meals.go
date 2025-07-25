@@ -17,9 +17,12 @@ type Meal struct {
 	AdditionalIngredients []*Ingredient    `json:"additional_ingredients"`
 }
 type LocationRequest struct {
-	LocationUUID uuid.UUID `json:"location_uuid"`
-	IsAvailable  bool      `json:"is_available"`
-	Price        float64   `json:"price"`
+	LocationUUID uuid.UUID     `json:"location_uuid"`
+	Availability *Availability `json:"availability"`
+	Price        float64       `json:"price"`
+}
+type Availability struct {
+	IsAvailable bool `json:"is_available"`
 }
 type Category struct {
 	Name          string      `json:"name"`
@@ -71,10 +74,11 @@ func (mdb Meal) Proto() *proto.Meal {
 	if mdb.LocationRequest != nil {
 		meal.LocationRequest = &proto.LocationRequest{
 			LocationUuid: mdb.LocationRequest.LocationUUID.Bytes(),
-			IsAvailable:  mdb.LocationRequest.IsAvailable,
 			Price:        float32(mdb.LocationRequest.Price),
 		}
-
+		if mdb.LocationRequest.Availability != nil {
+			meal.LocationRequest.Availability = &proto.Availability{IsAvailable: mdb.LocationRequest.Availability.IsAvailable}
+		}
 	}
 	if mdb.Category != nil {
 		meal.Category = &proto.Category{
@@ -112,8 +116,10 @@ func MealFromProto(pb *proto.Meal) *Meal {
 	if pb.LocationRequest != nil {
 		meal.LocationRequest = &LocationRequest{
 			LocationUUID: uuid.FromBytesOrNil(pb.LocationRequest.LocationUuid),
-			IsAvailable:  pb.LocationRequest.IsAvailable,
 			Price:        float64(pb.LocationRequest.Price),
+		}
+		if pb.LocationRequest.Availability != nil {
+			meal.LocationRequest.Availability = &Availability{IsAvailable: pb.LocationRequest.Availability.IsAvailable}
 		}
 	}
 	if pb.Category != nil {
